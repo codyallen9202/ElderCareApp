@@ -1,8 +1,10 @@
 # ElderCareApp
+
 App to aid the elderly
 ---
 
 ## Getting Started
+
 You will need to install [NodeJS](https://nodejs.org/en), also, check the box to install Chocolatey (Installation is slow)
 Update npm with 'npm install -g npm'
 Download ExpoGo on your phone
@@ -11,6 +13,7 @@ Scan the QR code with the ExpoGo app to test the app on your phone (must be on s
 ---
 
 ## Documentation
-[React Native](https://reactnative.dev/docs/getting-started)
-[NodeJS](https://nodejs.org/docs/latest/api/)
-[Expo](https://docs.expo.dev/)
+
+- [React Native](https://reactnative.dev/docs/getting-started)
+- [NodeJS](https://nodejs.org/docs/latest/api/)
+- [Expo](https://docs.expo.dev/)

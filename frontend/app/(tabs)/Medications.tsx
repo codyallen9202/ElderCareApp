@@ -25,10 +25,10 @@ export default function NewPage() {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={styles.circularButton}
-        onPress={() => handleButtonPress("Circular Button")}
+        style={styles.helpButton}
+        onPress={() => handleButtonPress("Help Button Pressed")}
       >
-        <Text style={styles.circularButtonText}>?</Text>
+        <Text style={styles.helpButtonText}>?</Text>
       </TouchableOpacity>
     </View>
   );
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  circularButton: {
+  helpButton: {
     position: 'absolute', 
     top: 40, 
     right: 20, 
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center', 
     alignItems: 'center',
   },
-  circularButtonText: {
+  helpButtonText: {
     color: '#fff', 
     fontSize: 30, 
     fontWeight: 'bold',

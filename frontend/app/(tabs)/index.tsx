@@ -65,13 +65,13 @@ const styles = StyleSheet.create({
     minWidth: 150, 
   },
   button1: {
-    backgroundColor: '#A9A600',
+    backgroundColor: '#A9A600', // Yellow
   },
   button2: {
-    backgroundColor: '#800000', 
+    backgroundColor: '#800000', // Maroon
   },
   button3: {
-    backgroundColor: '#6C3BAA', 
+    backgroundColor: '#6C3BAA',  // Purple
     marginTop: 400, 
     position: 'absolute', 
   },

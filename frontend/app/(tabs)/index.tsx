@@ -1,70 +1,102 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+// Sign up page- user needs to choose whether they are users or caregivers,
+// enter their name, and click the sign up button
+import React, { useState } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text, TextInput, Alert } from 'react-native';
 
 export default function HomeScreen() {
+  const [name, setName] = useState('');
+  const handleButtonPress = (buttonName) => {
+    Alert.alert(`Button "${buttonName}" pressed`);
+  };
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({ ios: 'cmd + d', android: 'cmd + m' })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={styles.container}>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          // Have tall oval dresses with different colors for each button
+          style={[styles.button, styles.button1]}
+          onPress={() => handleButtonPress("User")}
+        >
+          <Text style={styles.buttonText}>User</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={[styles.button, styles.button2]} 
+          onPress={() => handleButtonPress("Caregiver")}
+        >
+          <Text style={styles.buttonText}>Caregiver</Text>
+        </TouchableOpacity>
+        </View>
+
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your name"
+          value={name}
+          onChangeText={setName} // Updates the state with the typed name
+      />
+      <TouchableOpacity
+        style={[styles.button, styles.button3]} // Apply purple color to this button
+        onPress={() => handleButtonPress("Purple Button")}
+      >
+        <Text style={styles.buttonText}>Sign up</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: 'row',
+  container: {
+    flex: 1,
+    justifyContent: 'flex-start',
     alignItems: 'center',
-    gap: 8,
+    padding: 20,
+    marginTop: 200,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  buttonContainer: {
+    flexDirection: 'row',
+    gap: 30, 
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  button: {
+    paddingVertical: 30,
+    paddingHorizontal: 30,
+    borderRadius: 25, 
+    justifyContent: 'center',
+    alignItems: 'center',
+    minWidth: 150, 
+  },
+  button1: {
+    backgroundColor: '#A9A600',
+  },
+  button2: {
+    backgroundColor: '#800000', 
+  },
+  button3: {
+    backgroundColor: '#6C3BAA', 
+    marginTop: 400, 
+    position: 'absolute', 
+  },
+  buttonText: {
+    color: '#fff', 
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  screenContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  input: {
+    height: 50, 
+    borderBottomWidth: 1,
+    borderColor: '#ccc', 
+    width: '80%',
+    paddingLeft: 10, 
+    marginTop: 80, 
+    marginBottom: 20, 
+    fontSize: 22,
   },
 });

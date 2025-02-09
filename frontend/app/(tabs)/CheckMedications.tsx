@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 
-// :earned more about checkboxes: https://stackoverflow.com/questions/32174317/how-to-set-default-checked-in-checkbox-reactjs
+// Learned more about checkboxes: https://stackoverflow.com/questions/32174317/how-to-set-default-checked-in-checkbox-reactjs
 function Checkbox({ label, value, onChange }) {
   return(
     <View style={styles.checkboxContainer}>

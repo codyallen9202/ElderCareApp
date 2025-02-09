@@ -12,11 +12,11 @@ export default function ScanQRCodePage() {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-      style={styles.helpButton}
-      onPress={() => handleButtonPress("Help Button")}
+        style={styles.helpButton}
+        onPress={() => handleButtonPress("Help Button")}
       >
       <Text style={styles.helpButtonText}>?</Text>
-    </TouchableOpacity>
+      </TouchableOpacity>
     
     <View style={styles.container}>
       <Text style={styles.title}>

@@ -28,7 +28,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="Medications"
+        name="CheckMedications"
         options={{
           title: 'Meds',
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="pills" color={color} />,
@@ -41,13 +41,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="heartbeat" color={color} />,
         }}
       />
-      <Tabs.Screen
+      {/* <Tabs.Screen
         name="CheckMedications"
         options={{
           title: 'CheckMed',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="heartbeat" color={color} />,
         }}
-      />
+      /> */}
       <Tabs.Screen
         name="Schedule"
         options={{

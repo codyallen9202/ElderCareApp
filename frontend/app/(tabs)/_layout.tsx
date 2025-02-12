@@ -23,42 +23,35 @@ export default function TabLayout() {
       <Tabs.Screen
         name="HomePage"
         options={{
-          title: 'Home',
+          title: '',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
         }}
       />
       <Tabs.Screen
         name="CheckMedications"
         options={{
-          title: 'Meds',
+          title: '',
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="pills" color={color} />,
         }}
       />
       <Tabs.Screen
         name="Vitals"
         options={{
-          title: 'Vitals',
+          title: '',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="heartbeat" color={color} />,
         }}
       />
-      {/* <Tabs.Screen
-        name="CheckMedications"
-        options={{
-          title: 'CheckMed',
-          tabBarIcon: ({ color }) => <FontAwesome size={28} name="heartbeat" color={color} />,
-        }}
-      /> */}
       <Tabs.Screen
         name="Schedule"
         options={{
-          title: 'Schedule',
+          title: '',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="calendar" color={color} />,
         }}
       />
       <Tabs.Screen
         name="CaregiversList"
         options={{
-          title: 'Caregivers',
+          title: '',
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="user-friends" color={color} />,
         }}
       />

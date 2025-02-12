@@ -1,18 +1,17 @@
 // Very bare bones- need to have their full schedule in a scrollable view
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function VitalsPage() {
-  const handleButtonPress = (buttonName) => {
-    alert(`Button "${buttonName}" pressed`);
-  };
+  const router = useRouter();
   
   return (
     // Title needs to be moved up to the top of the page
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.helpButton}
-        onPress={() => handleButtonPress("Help Button")}
+        onPress={() => router.push('/HomePage')}
       >
         <Text style={styles.helpButtonText}>?</Text>
       </TouchableOpacity>

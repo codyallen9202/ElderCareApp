@@ -1,13 +1,14 @@
 // Sign up page- user needs to choose whether they are users or caregivers,
 // enter their name, and click the sign up button
+
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text, TextInput, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 
-export default function HomeScreen() {
+
+export default function index() {
   const [name, setName] = useState('');
-  const handleButtonPress = (buttonName) => {
-    Alert.alert(`Button "${buttonName}" pressed`);
-  };
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
@@ -15,14 +16,14 @@ export default function HomeScreen() {
         <TouchableOpacity
           // Have tall oval dresses with different colors for each button
           style={[styles.button, styles.button1]}
-          onPress={() => handleButtonPress("User")}
+          onPress={() => router.push('/FirstPage')}
         >
           <Text style={styles.buttonText}>User</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, styles.button2]} 
-          onPress={() => handleButtonPress("Caregiver")}
+          onPress={() => router.push('/FirstPage')}
         >
           <Text style={styles.buttonText}>Caregiver</Text>
         </TouchableOpacity>
@@ -36,7 +37,7 @@ export default function HomeScreen() {
       />
       <TouchableOpacity
         style={[styles.button, styles.button3]} // Apply purple color to this button
-        onPress={() => handleButtonPress("Purple Button")}
+        onPress={() => router.push('/FirstPage')}
       >
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>

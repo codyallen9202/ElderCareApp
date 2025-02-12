@@ -1,7 +1,9 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function CaregiversList() {
+  const router = useRouter();
     // Hard code caregivers for right now
   const caregivers = [
     'Caregiver #1',
@@ -12,15 +14,12 @@ export default function CaregiversList() {
     alert('Alert All Pressed');
   };
 
-  const handleButtonPress = (buttonName) => {
-    alert(`Button "${buttonName}" pressed`);
-  };
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.helpButton}
-        onPress={() => handleButtonPress("Help Button")}
+        onPress={() => router.push('/HomePage')}
       >
       <Text style={styles.helpButtonText}>?</Text>
       </TouchableOpacity>

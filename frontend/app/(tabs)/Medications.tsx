@@ -1,8 +1,10 @@
 // Medications page- are able to choose to log their medication or check their medications for the day
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function NewPage() {
+  const router = useRouter();
   const handleButtonPress = (buttonName) => {
     alert(`Button "${buttonName}" pressed`);
   };
@@ -11,22 +13,22 @@ export default function NewPage() {
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.button, styles.button1]} 
-        onPress={() => handleButtonPress("Button 1")}
+        onPress={() => router.push('/LogMedication')}
       >
-        <Text style={styles.buttonText}>Current Activity</Text>
+        <Text style={styles.buttonText}>Log medication</Text>
       </TouchableOpacity>
 
       {/* Button 2 - on the bottom */}
       <TouchableOpacity
         style={[styles.button, styles.button2]} 
-        onPress={() => handleButtonPress("Button 2")}
+        onPress={() => router.push('/CheckMedications')}
       >
-        <Text style={styles.buttonText}>Home page</Text>
+        <Text style={styles.buttonText}>Check Medications for Today</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.helpButton}
-        onPress={() => handleButtonPress("Help Button Pressed")}
+        onPress={() => console.log("Do something with the Help Button")}
       >
         <Text style={styles.helpButtonText}>?</Text>
       </TouchableOpacity>

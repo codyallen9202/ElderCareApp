@@ -1,9 +1,11 @@
 // Page that allows the user to go either to the home page or to their current routine event
 import React, { useState } from 'react';
 import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { useRouter } from 'expo-router';
 
-export default function NewPage() {
-  const handleButtonPress = (buttonName) => {
+export default function FirstPage() {
+  const router = useRouter();
+  const handleButtonPress = (buttonName:string) => {
     alert(`Button "${buttonName}" pressed`);
   };
 
@@ -11,7 +13,7 @@ export default function NewPage() {
     <View style={styles.container}>
       <TouchableOpacity
         style={[styles.button, styles.button1]} 
-        onPress={() => handleButtonPress("Button 1")}
+        onPress={() => router.push('/Medications')}
       >
         <Text style={styles.buttonText}>Current Activity</Text>
       </TouchableOpacity>
@@ -19,14 +21,14 @@ export default function NewPage() {
       {/* Button 2 - on the bottom */}
       <TouchableOpacity
         style={[styles.button, styles.button2]} 
-        onPress={() => handleButtonPress("Button 2")}
+        onPress={() => router.push('/HomePage')}
       >
         <Text style={styles.buttonText}>Home page</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.circularButton}
-        onPress={() => handleButtonPress("Circular Button")}
+        onPress={() => console.log("Do something with the help button")}
       >
         <Text style={styles.circularButtonText}>?</Text>
       </TouchableOpacity>

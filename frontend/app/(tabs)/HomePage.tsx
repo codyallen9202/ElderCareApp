@@ -2,11 +2,10 @@
 // Or they can just look at their schedule for the day
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function LayoutPage() {
-  const handleButtonPress = (buttonName) => {
-    alert(`${buttonName} pressed`);
-  };
+  const router = useRouter();
 
   return (
     // Want calendar above the buttons
@@ -16,13 +15,13 @@ export default function LayoutPage() {
       <View style={styles.buttonRow}>
         <TouchableOpacity
           style={[styles.button, styles.scheduleButton]}
-          onPress={() => handleButtonPress("Button 1")}
+          onPress={() => router.push('/Schedule')}
         >
           <Text style={styles.buttonText}>picSchedule</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.medicationButton]}
-          onPress={() => handleButtonPress("Button 2")}
+          onPress={() => router.push('/Medications')}
         >
           <Text style={styles.buttonText}>picMedication</Text>
         </TouchableOpacity>
@@ -31,13 +30,13 @@ export default function LayoutPage() {
       <View style={styles.buttonRow}>
         <TouchableOpacity
           style={[styles.button, styles.caregiversButton]}
-          onPress={() => handleButtonPress("Button 3")}
+          onPress={() => router.push('/CaregiversList')}
         >
           <Text style={styles.buttonText}>picCaregivers</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={[styles.button, styles.vitalsButton]}
-          onPress={() => handleButtonPress("Button 4")}
+          onPress={() => router.push('/Vitals')}
         >
           <Text style={styles.buttonText}>picVitals</Text>
         </TouchableOpacity>

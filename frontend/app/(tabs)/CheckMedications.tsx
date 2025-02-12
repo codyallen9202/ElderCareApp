@@ -2,6 +2,7 @@
 // apprear next to it (or they can toggle it themselves)
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 // Learned more about checkboxes: https://stackoverflow.com/questions/32174317/how-to-set-default-checked-in-checkbox-reactjs
 function Checkbox({ label, value, onChange }) {
@@ -20,6 +21,7 @@ function Checkbox({ label, value, onChange }) {
 }
 
 export default function App() {
+  const router = useRouter();
   // Hard coded data- next step will be to take this data from the database
   const [medicationChecked, setMedicationChecked] = useState({medication1: false, medication2: false, medication3: false,});
 
@@ -34,16 +36,13 @@ export default function App() {
     
   };
 
-  const handleButtonPress = (buttonName) => {
-    alert(`Button "${buttonName}" pressed`);
-  };
 
   return (
     <View style={styles.container}>
 
       <TouchableOpacity
           style={styles.helpButton}
-            onPress={() => handleButtonPress("Help Button")}
+          onPress={() => router.push('/HomePage')}
         >
         <Text style={styles.helpButtonText}>?</Text>
       </TouchableOpacity>

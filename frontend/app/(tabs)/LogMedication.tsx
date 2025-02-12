@@ -3,17 +3,16 @@
 // pill bottle. This will be added into the database as a pill they have taken on that day
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+import { useRouter } from 'expo-router';
 
 export default function ScanQRCodePage() {
-  const handleButtonPress = (buttonName) => {
-    alert(`Button "${buttonName}" pressed`);
-  };
+  const router = useRouter();
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
         style={styles.helpButton}
-        onPress={() => handleButtonPress("Help Button")}
+        onPress={() => router.push('/HomePage')}
       >
       <Text style={styles.helpButtonText}>?</Text>
       </TouchableOpacity>

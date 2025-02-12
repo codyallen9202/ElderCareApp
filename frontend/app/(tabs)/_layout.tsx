@@ -28,7 +28,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="CheckMedications"
+        name="Medications"
         options={{
           title: '',
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="pills" color={color} />,
@@ -49,7 +49,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="CaregiversList"
+        name="Caregivers"
         options={{
           title: '',
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="user-friends" color={color} />,

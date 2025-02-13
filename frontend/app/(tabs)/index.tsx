@@ -1,5 +1,6 @@
 // Home page - user can go to any of the buttons they click
 // Or they can just look at their schedule for the day
+// Initial page must be named index.tsx
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -20,7 +21,7 @@ export default function LayoutPage() {
 
           <TouchableOpacity
             style={[styles.button, styles.medicationButton]}
-            onPress={() => router.push('/CheckMedications')}
+            onPress={() => router.push('/Medications')}
           >
             <FontAwesome5 size={72} name="pills" color={'#fff'} />
             <Text style={styles.buttonText}>Medications</Text>
@@ -44,7 +45,7 @@ export default function LayoutPage() {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, styles.caregiversButton]}
-            onPress={() => router.push('/CaregiversList')}
+            onPress={() => router.push('/Caregivers')}
           >
             <FontAwesome5 size={72} name="user-friends" color={'#fff'} />
             <Text style={styles.buttonText}>Caregivers</Text>

@@ -1,18 +1,14 @@
 import React from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import { StyleSheet, View, Button, Alert } from 'react-native';
 
-export default function HelpButton() {
-    const router = useRouter();
+export default function HelpButton({ input }: { input: string }) {
 
     return (
         <View>
-            <TouchableOpacity
-                style={styles.helpButton}
-                onPress={() => router.push('/(tabs)/')}
-            >
-                <Text style={styles.helpButtonText}>?</Text>
-            </TouchableOpacity>
+            <Button
+                title='?'
+                onPress={() => Alert.alert(input)}
+            />
         </View>
 
     )

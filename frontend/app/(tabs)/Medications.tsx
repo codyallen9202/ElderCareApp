@@ -5,6 +5,8 @@ import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
 import { StyleSheet, View } from 'react-native';
 
+const helpText = 'Blah Blah Blah'
+
 export default function App() {
   return (
     <View style={StyleSheet.container}>
@@ -12,7 +14,7 @@ export default function App() {
         <MedList />
       </View>
       <View style={StyleSheet.helpButton}>
-        <HelpButton />
+        <HelpButton input={helpText} />
       </View>
     </View>
 
@@ -21,12 +23,12 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+
   },
   medList: {
 
   },
   helpButton: {
-    position: 'absolute',
+
   },
 });

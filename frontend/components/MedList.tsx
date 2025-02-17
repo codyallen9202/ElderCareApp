@@ -37,15 +37,7 @@ export default function MedList() {
 
     return (
         <View style={styles.container}>
-
-            <TouchableOpacity
-                style={styles.helpButton}
-                onPress={() => router.push('index')}
-            >
-                <Text style={styles.helpButtonText}>?</Text>
-            </TouchableOpacity>
-
-            <Text style={styles.title}>Check Medications</Text>
+            <Text style={styles.title}>Today's Medicine</Text>
             <Checkbox
                 label="Medication 1"
                 value={medicationChecked.medication1}

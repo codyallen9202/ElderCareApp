@@ -1,14 +1,17 @@
 import React from "react";
-import { StyleSheet, View, Button, Alert } from 'react-native';
+import { StyleSheet, View, Pressable, Alert, Text } from 'react-native';
 
 export default function HelpButton({ input }: { input: string }) {
 
     return (
         <View>
-            <Button
-                title='?'
+            <Pressable
+                style={styles.helpButton}
                 onPress={() => Alert.alert(input)}
-            />
+            >
+                <Text style={styles.helpButtonText}>?</Text>
+            </Pressable>
+
         </View>
 
     )

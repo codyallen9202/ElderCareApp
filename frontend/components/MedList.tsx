@@ -1,7 +1,7 @@
 // A component to list the medications for the day
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
-import { useRouter } from 'expo-router';
+import getDate from '@/functions/get-date';
 
 // Learned more about checkboxes: https://stackoverflow.com/questions/32174317/how-to-set-default-checked-in-checkbox-reactjs
 function Checkbox({ label, value, onChange }) {
@@ -20,7 +20,7 @@ function Checkbox({ label, value, onChange }) {
 }
 
 export default function MedList() {
-    const router = useRouter();
+    const today = getDate();
     // Hard coded data- next step will be to take this data from the database
     const [medicationChecked, setMedicationChecked] = useState({ medication1: false, medication2: false, medication3: false, });
 
@@ -37,7 +37,8 @@ export default function MedList() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Today's Medicine</Text>
+            <Text style={styles.title}>{today[3]}</Text>
+            <Text>{today[2]} {today[1]} {today[0]}</Text>
             <Checkbox
                 label="Medication 1"
                 value={medicationChecked.medication1}

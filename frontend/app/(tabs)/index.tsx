@@ -8,13 +8,17 @@ import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
+import DateDisplay from '@/components/DateDisplay';
+
 export default function LayoutPage() {
   const router = useRouter();
 
   return (
     // Want calendar above the buttons
     <View style={styles.container}>
-      <View style={styles.calendar}></View>
+      <View style={styles.calendar}>
+        <DateDisplay />
+      </View>
 
       <View style={styles.buttonContainer}> {/* Container for all 4 buttons */}
         <View style={styles.buttonRow}> {/* Container for top two buttons */}

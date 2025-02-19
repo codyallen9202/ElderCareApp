@@ -23,11 +23,11 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     weekday: {
-        fontWeight: 400,
+        fontWeight: 600,
         fontSize: 36,
     },
     date: {
-        fontWeight: 300,
+        fontWeight: 400,
         fontSize: 25,
     }
 });

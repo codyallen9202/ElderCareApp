@@ -1,10 +1,15 @@
 import React from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import HelpButton from '@/components/HelpButton';
+
+const helpText = `This page displays a list of trusted caregivers who can assist you.
+                  You can contact them when needed, and they can receive alerts if you require urgent help.
+                  Press the "Alert All" button to notify all caregivers at once.`
 
 export default function CaregiversList() {
   const router = useRouter();
-    // Hard code caregivers for right now
+  // Hard code caregivers for right now
   const caregivers = [
     'Caregiver #1',
     'Caregiver #2',
@@ -17,12 +22,7 @@ export default function CaregiversList() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        style={styles.helpButton}
-        onPress={() => router.push('/HomePage')}
-      >
-      <Text style={styles.helpButtonText}>?</Text>
-      </TouchableOpacity>
+      <HelpButton input={helpText} />
       <Text style={styles.title}>Caregivers List</Text>
 
       <View style={styles.list}>
@@ -87,19 +87,19 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   helpButton: {
-    position: 'absolute', 
-    top: 40, 
-    right: 20, 
-    width: 60, 
-    height: 60, 
+    position: 'absolute',
+    top: 40,
+    right: 20,
+    width: 60,
+    height: 60,
     backgroundColor: '#FF0000', // Red
-    borderRadius: 30, 
-    justifyContent: 'center', 
+    borderRadius: 30,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   helpButtonText: {
-    color: '#fff', 
-    fontSize: 30, 
+    color: '#fff',
+    fontSize: 30,
     fontWeight: 'bold',
   }
 });

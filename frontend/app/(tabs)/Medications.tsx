@@ -3,17 +3,24 @@
 import React from 'react';
 import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
+import DateDisplay from '@/components/DateDisplay';
 import { StyleSheet, View } from 'react-native';
 
 const helpText = 'Blah Blah Blah'
 
+// All this does is call each different component
+// Each one is housed in a <View> component to serve as
+// a container for styling
 export default function App() {
   return (
-    <View style={StyleSheet.container}>
-      <View style={StyleSheet.medList}>
+    <View style={styles.container}>
+      <View style={styles.dateContainer}>
+        <DateDisplay />
+      </View>
+      <View style={styles.medListContainer}>
         <MedList />
       </View>
-      <View style={StyleSheet.helpButton}>
+      <View style={styles.helpButtonContainer}>
         <HelpButton input={helpText} />
       </View>
     </View>
@@ -23,12 +30,17 @@ export default function App() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    flexDirection: 'column'
+  },
+  dateContainer: {
 
   },
-  medList: {
-
+  medListContainer: {
+    width: '100%',
+    height: '50%'
   },
-  helpButton: {
-
+  helpButtonContainer: {
+    backgroundColor: 'green'
   },
 });

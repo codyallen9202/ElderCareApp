@@ -6,7 +6,13 @@ import HelpButton from '@/components/HelpButton';
 import DateDisplay from '@/components/DateDisplay';
 import { StyleSheet, View } from 'react-native';
 
-const helpText = 'Blah Blah Blah'
+// The help text for the page
+const helpText = `This page displays a list of medications scheduled for today. 
+                  Each medication is shown in a scrollable list. You can tap on 
+                  a medication to mark it as taken, which will toggle a checkmark 
+                  next to it. If you accidentally mark a medication, simply tap 
+                  it again to remove the checkmark. The date at the top helps 
+                  you confirm that you're viewing today's medications.`
 
 // All this does is call each different component
 // Each one is housed in a <View> component to serve as

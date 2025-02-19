@@ -2,12 +2,14 @@ import React from "react";
 import { StyleSheet, View, Pressable, Alert, Text } from 'react-native';
 
 export default function HelpButton({ input }: { input: string }) {
-
     return (
         <View>
             <Pressable
                 style={styles.helpButton}
-                onPress={() => Alert.alert(input)}
+                onPress={() => {
+                    Alert.alert("Title", input)
+                    window.alert(input)
+                }}
             >
                 <Text style={styles.helpButtonText}>?</Text>
             </Pressable>

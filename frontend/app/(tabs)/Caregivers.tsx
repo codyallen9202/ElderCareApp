@@ -72,7 +72,7 @@ export default function CaregiversList() {
   };
   
 
-  // ✅ **SMS Alert to all caregivers**
+  // **SMS Alert to all caregivers**
   const sendSMSBlast = () => {
     if (caregivers.length === 0) {
       alert("No caregivers available to alert.");
@@ -123,43 +123,31 @@ export default function CaregiversList() {
       </TouchableOpacity>
 
       
-<Modal
-  animationType="slide"
+      <Modal
+  animationType="fade"
   transparent={true}
-  visible={addModalVisible}
-  onRequestClose={() => setAddModalVisible(false)}
+  visible={deleteModalVisible}
+  onRequestClose={() => setDeleteModalVisible(false)}
 >
   <View style={styles.modalWrapper}>
-    {/* Background Blur Effect */}
-    {Platform.OS === 'web' ? (
-      <View style={styles.modalBackgroundFallback} />
-    ) : (
-      <BlurView intensity={50} style={styles.modalBackground} />
-    )}
-
     <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Add New Caregiver</Text>
-
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={newCaregiverName}
-        onChangeText={setNewCaregiverName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Phone"
-        value={newCaregiverPhone}
-        onChangeText={setNewCaregiverPhone}
-        keyboardType="phone-pad"
-      />
-
+      <Text style={styles.modalTitle}>Confirm Deletion</Text>
+      <Text style={styles.modalMessage}>
+        Are you sure you want to delete{' '}
+        <Text style={{ fontWeight: 'bold' }}>
+          {caregiverToDelete ? caregiverToDelete.name : 'this caregiver'}
+        </Text>
+        ?
+      </Text>
       <View style={styles.modalButtons}>
-        <TouchableOpacity style={styles.modalButton} onPress={handleSaveCaregiver}>
-          <Text style={styles.modalButtonText}>✔ Save</Text>
+        <TouchableOpacity style={styles.modalButton} onPress={handleDeleteCaregiver}>
+          <Text style={styles.modalButtonText}>Yes</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setAddModalVisible(false)}>
-          <Text style={styles.modalButtonText}>✖ Cancel</Text>
+        <TouchableOpacity
+          style={[styles.modalButton, styles.cancelButton]}
+          onPress={() => setDeleteModalVisible(false)}
+        >
+          <Text style={styles.modalButtonText}>No</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -225,7 +213,6 @@ const styles = StyleSheet.create({
     color: '#555',
     marginTop: 5,
   },
-
   
   deleteButton: {
     padding: 15, 

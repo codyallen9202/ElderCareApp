@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import HelpButton from '@/components/HelpButton';
 import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
@@ -10,6 +10,12 @@ const CalendarScreen = ({ }) => {
   const [currentDate] = useState(new Date());
   const [daysList, setDaysList] = useState([...Array(30).keys()]); 
   const [, setDayRange] = useState([0, 29]); // Load in 30 days of a time
+
+  const handleAddEvent = () => {
+    console.log("Add event button clicked!");
+    // You can add logic to open a modal or navigate to another screen to add the event.
+  };
+  
 
   // Everytime the user gets to the end the the list of 30 days,
   // append 30 days so it's an infinitely scrollable list
@@ -26,6 +32,11 @@ const CalendarScreen = ({ }) => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.text}>Schedule</Text>
+
+          <TouchableOpacity onPress={handleAddEvent} style={styles.addEventButton}>
+            <Text style={styles.buttonText}>+</Text>
+          </TouchableOpacity>
+
           <HelpButton input={helpText} />
         </View>
 
@@ -62,6 +73,20 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+  },
+  addEventButton:{
+    padding: 10,
+    backgroundColor: '#ffee8c',
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 60,
+    height:60,
+  },
+  buttonText:{
+    fontSize: 30,
+    color: 'black',
+    fontWeight: 'bold',
   },
   monthText: {
     fontSize: 18,

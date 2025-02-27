@@ -13,6 +13,8 @@ import {
   Platform,
 } from 'react-native';
 import HelpButton from '@/components/HelpButton';
+import { sendSMSBlast } from '@/components/smsBlast';
+
 
 const helpText = `This page displays a list of trusted caregivers who can assist you.
 You can view their name and phone number. Tap on "Add Caregiver" to create a new caregiver entry,
@@ -30,11 +32,7 @@ export default function CaregiversList() {
   const [newCaregiverName, setNewCaregiverName] = useState('');
   const [newCaregiverPhone, setNewCaregiverPhone] = useState('');
 
-  //  **Ensure "Delete Confirmation" modal works**
-  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
-  const [caregiverToDelete, setCaregiverToDelete] = useState(null);
-
-  //  **Open "Add Caregiver" Modal**
+  
   const handleAddCaregiver = () => {
     setAddModalVisible(true);
   };
@@ -56,35 +54,14 @@ export default function CaregiversList() {
     }
   };
 
-  const confirmDelete = (caregiver) => {
-    setCaregiverToDelete(caregiver); 
-    setDeleteModalVisible(true);
+  const handleDeleteCaregiver = (caregiverId) => {
+    setCaregivers(prevCaregivers =>
+      prevCaregivers.filter(item => item.id !== caregiverId)
+    );
   };
-  
-  const handleDeleteCaregiver = () => {
-    if (caregiverToDelete) {
-      setCaregivers(prevCaregivers =>
-        prevCaregivers.filter(item => item.id !== caregiverToDelete.id)
-      );
-      setDeleteModalVisible(false); //  Close modal
-      setCaregiverToDelete(null); //  Reset selected caregiver
-    }
-  };
-  
 
   // **SMS Alert to all caregivers**
-  const sendSMSBlast = () => {
-    if (caregivers.length === 0) {
-      alert("No caregivers available to alert.");
-      return;
-    }
 
-    const phoneNumbers = caregivers.map(c => c.phone).join(',');
-    const message = encodeURIComponent("⚠️ Urgent Alert: Please check in now!");
-    const smsUrl = `sms:${phoneNumbers}?body=${message}`;
-
-    Linking.openURL(smsUrl).catch(err => console.error('Error opening SMS app:', err));
-  };
 
   const renderCaregiver = ({ item }) => (
     <View style={styles.caregiver}>
@@ -92,7 +69,7 @@ export default function CaregiversList() {
         <Text style={styles.caregiverName}>{item.name}</Text>
         <Text style={styles.caregiverPhone}>Phone: {item.phone}</Text>
       </View>
-      <TouchableOpacity style={styles.deleteButton} onPress={() => confirmDelete(item)}>
+      <TouchableOpacity style={styles.deleteButton} onPress={() => handleDeleteCaregiver(item.id)}>
         <Image source={require('../../assets/remove.png')} style={styles.deleteIcon} />
       </TouchableOpacity>
     </View>
@@ -118,36 +95,47 @@ export default function CaregiversList() {
       </TouchableOpacity>
 
       {/*  **Alert All Button** */}
-      <TouchableOpacity style={styles.alertButton} onPress={sendSMSBlast}>
-        <Text style={styles.alertButtonText}>Alert All</Text>
+      <TouchableOpacity style={styles.alertButton} onPress={() => sendSMSBlast([...caregivers])}>
+      <Text style={styles.alertButtonText}>Alert All</Text>
       </TouchableOpacity>
 
-      
-      <Modal
-  animationType="fade"
+<Modal
+  animationType="slide"
   transparent={true}
-  visible={deleteModalVisible}
-  onRequestClose={() => setDeleteModalVisible(false)}
+  visible={addModalVisible}
+  onRequestClose={() => setAddModalVisible(false)}
 >
   <View style={styles.modalWrapper}>
+    {/* Background Blur Effect */}
+    {Platform.OS === 'web' ? (
+      <View style={styles.modalBackgroundFallback} />
+    ) : (
+      <BlurView intensity={50} style={styles.modalBackground} />
+    )}
+
     <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Confirm Deletion</Text>
-      <Text style={styles.modalMessage}>
-        Are you sure you want to delete{' '}
-        <Text style={{ fontWeight: 'bold' }}>
-          {caregiverToDelete ? caregiverToDelete.name : 'this caregiver'}
-        </Text>
-        ?
-      </Text>
+      <Text style={styles.modalTitle}>Add New Caregiver</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Name"
+        value={newCaregiverName}
+        onChangeText={setNewCaregiverName}
+      />
+      <TextInput
+        style={styles.input}
+        placeholder="Phone"
+        value={newCaregiverPhone}
+        onChangeText={setNewCaregiverPhone}
+        keyboardType="phone-pad"
+      />
+
       <View style={styles.modalButtons}>
-        <TouchableOpacity style={styles.modalButton} onPress={handleDeleteCaregiver}>
-          <Text style={styles.modalButtonText}>Yes</Text>
+        <TouchableOpacity style={styles.modalButton} onPress={handleSaveCaregiver}>
+          <Text style={styles.modalButtonText}>✔ Save</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.modalButton, styles.cancelButton]}
-          onPress={() => setDeleteModalVisible(false)}
-        >
-          <Text style={styles.modalButtonText}>No</Text>
+        <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setAddModalVisible(false)}>
+          <Text style={styles.modalButtonText}>✖ Cancel</Text>
         </TouchableOpacity>
       </View>
     </View>

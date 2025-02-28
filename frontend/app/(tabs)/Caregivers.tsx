@@ -24,7 +24,7 @@ export default function CaregiversList() {
   //  **Restore default caregivers list**
   const [caregivers, setCaregivers] = useState([
     { id: '1', name: 'Cody Allen', phone: '865-712-2138' },
-   // { id: '2', name: 'Caregiver Two', phone: '987-654-3210' },
+    // { id: '2', name: 'Caregiver Two', phone: '987-654-3210' },
   ]);
 
   //  **Ensure "Add Caregiver" modal opens & closes properly**
@@ -32,7 +32,7 @@ export default function CaregiversList() {
   const [newCaregiverName, setNewCaregiverName] = useState('');
   const [newCaregiverPhone, setNewCaregiverPhone] = useState('');
 
-  
+
   const handleAddCaregiver = () => {
     setAddModalVisible(true);
   };
@@ -54,7 +54,7 @@ export default function CaregiversList() {
     }
   };
 
-  const handleDeleteCaregiver = (caregiverId) => {
+  const handleDeleteCaregiver = (caregiverId: string) => {
     setCaregivers(prevCaregivers =>
       prevCaregivers.filter(item => item.id !== caregiverId)
     );
@@ -63,7 +63,7 @@ export default function CaregiversList() {
   // **SMS Alert to all caregivers**
 
 
-  const renderCaregiver = ({ item }) => (
+  const renderCaregiver = ({ item }: any) => (
     <View style={styles.caregiver}>
       <View style={styles.caregiverInfo}>
         <Text style={styles.caregiverName}>{item.name}</Text>
@@ -96,51 +96,51 @@ export default function CaregiversList() {
 
       {/*  **Alert All Button** */}
       <TouchableOpacity style={styles.alertButton} onPress={() => sendSMSBlast([...caregivers])}>
-      <Text style={styles.alertButtonText}>Alert All</Text>
+        <Text style={styles.alertButtonText}>Alert All</Text>
       </TouchableOpacity>
 
-<Modal
-  animationType="slide"
-  transparent={true}
-  visible={addModalVisible}
-  onRequestClose={() => setAddModalVisible(false)}
->
-  <View style={styles.modalWrapper}>
-    {/* Background Blur Effect */}
-    {Platform.OS === 'web' ? (
-      <View style={styles.modalBackgroundFallback} />
-    ) : (
-      <BlurView intensity={50} style={styles.modalBackground} />
-    )}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={addModalVisible}
+        onRequestClose={() => setAddModalVisible(false)}
+      >
+        <View style={styles.modalWrapper}>
+          {/* Background Blur Effect */}
+          {Platform.OS === 'web' ? (
+            <View style={styles.modalBackgroundFallback} />
+          ) : (
+            <BlurView intensity={50} style={styles.modalBackground} />
+          )}
 
-    <View style={styles.modalContent}>
-      <Text style={styles.modalTitle}>Add New Caregiver</Text>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Add New Caregiver</Text>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Name"
-        value={newCaregiverName}
-        onChangeText={setNewCaregiverName}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Phone"
-        value={newCaregiverPhone}
-        onChangeText={setNewCaregiverPhone}
-        keyboardType="phone-pad"
-      />
+            <TextInput
+              style={styles.input}
+              placeholder="Name"
+              value={newCaregiverName}
+              onChangeText={setNewCaregiverName}
+            />
+            <TextInput
+              style={styles.input}
+              placeholder="Phone"
+              value={newCaregiverPhone}
+              onChangeText={setNewCaregiverPhone}
+              keyboardType="phone-pad"
+            />
 
-      <View style={styles.modalButtons}>
-        <TouchableOpacity style={styles.modalButton} onPress={handleSaveCaregiver}>
-          <Text style={styles.modalButtonText}>✔ Save</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setAddModalVisible(false)}>
-          <Text style={styles.modalButtonText}>✖ Cancel</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
-  </View>
-</Modal>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity style={styles.modalButton} onPress={handleSaveCaregiver}>
+                <Text style={styles.modalButtonText}>✔ Save</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setAddModalVisible(false)}>
+                <Text style={styles.modalButtonText}>✖ Cancel</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 60,
     paddingHorizontal: 30,
-    backgroundColor: '#F9F9F9', 
+    backgroundColor: '#F9F9F9',
   },
   title: {
     fontSize: 36,
@@ -161,7 +161,7 @@ const styles = StyleSheet.create({
   },
   list: {
     width: '100%',
-    flexGrow: 1, 
+    flexGrow: 1,
     justifyContent: 'center',
     paddingBottom: 20,
   },
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.15,
     shadowRadius: 4,
-    elevation: 3, 
+    elevation: 3,
   },
   caregiverInfo: {
     flex: 1,
@@ -201,13 +201,13 @@ const styles = StyleSheet.create({
     color: '#555',
     marginTop: 5,
   },
-  
+
   deleteButton: {
-    padding: 15, 
-    marginRight: -5, 
+    padding: 15,
+    marginRight: -5,
   },
   deleteIcon: {
-    width: 50, 
+    width: 50,
     height: 50,
   },
 
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '90%', 
+    width: '90%',
     marginBottom: 20,
   },
   addButtonText: {
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    width: '90%', 
+    width: '90%',
     marginBottom: 40,
   },
   alertButtonText: {
@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
 
-  
+
   modalBackground: {
     position: 'absolute',
     width: '100%',
@@ -262,9 +262,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0,0,0,0.4)',  
+    backgroundColor: 'rgba(0,0,0,0.4)',
     backdropFilter: 'blur(10px)',  // ✅ CSS Blur Effect (Web Only)
-    WebkitBackdropFilter: 'blur(10px)',  
+    WebkitBackdropFilter: 'blur(10px)',
   },
 
   // 🔹 Modal Styling
@@ -297,7 +297,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F8F8F8',
   },
 
- 
+
   modalButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -322,4 +322,3 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CaregiversList;

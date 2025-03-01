@@ -23,14 +23,14 @@ const styles = StyleSheet.create({
     helpButton: {
         width: 60,
         height: 60,
-        backgroundColor: '#D1001F', // Red
+        backgroundColor: 'transparent',
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
     },
     helpButtonText: {
-        color: '#fff',
-        fontSize: 30,
+        color: '#D1001F',
+        fontSize: 48,
         fontWeight: 'bold',
     }
 });

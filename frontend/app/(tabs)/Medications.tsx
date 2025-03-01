@@ -4,6 +4,7 @@ import React from 'react';
 import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
 import DateDisplay from '@/components/DateDisplay';
+import AddMedicationButton from '@/components/AddMedicationButton';
 import { StyleSheet, View } from 'react-native';
 
 // The help text for the page
@@ -24,6 +25,9 @@ export default function App() {
         <DateDisplay />
         <View style={styles.helpButton}>
           <HelpButton input={helpText} />
+        </View>
+        <View style={styles.addButton}>
+          <AddMedicationButton />
         </View>
       </View>
       <View style={styles.medListContainer}>
@@ -46,6 +50,11 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   helpButton: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+  },
+  addButton: {
     position: 'absolute',
     top: 10,
     right: 10,

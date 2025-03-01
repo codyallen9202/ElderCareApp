@@ -20,14 +20,14 @@ const helpText = `This page displays a list of medications scheduled for today.
 export default function App() {
   return (
     <View style={styles.container}>
-      <View style={styles.dateContainer}>
+      <View style={styles.header}>
         <DateDisplay />
+        <View style={styles.helpButton}>
+          <HelpButton input={helpText} />
+        </View>
       </View>
       <View style={styles.medListContainer}>
         <MedList />
-      </View>
-      <View style={styles.helpButtonContainer}>
-        <HelpButton input={helpText} />
       </View>
     </View>
 
@@ -39,14 +39,20 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column'
   },
-  dateContainer: {
-
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'relative'
+  },
+  helpButton: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
   },
   medListContainer: {
+    marginTop: 25,
     width: '100%',
-    height: '50%'
-  },
-  helpButtonContainer: {
-    backgroundColor: 'green'
+    height: '100%',
   },
 });

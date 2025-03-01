@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
     helpButton: {
         width: 60,
         height: 60,
-        backgroundColor: '#FF0000', // Red
+        backgroundColor: '#D1001F', // Red
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',

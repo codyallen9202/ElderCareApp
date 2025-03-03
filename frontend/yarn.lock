@@ -3304,7 +3304,7 @@ balanced-match@^1.0.0:
   resolved "https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.2.tgz"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
 
-base64-js@^1.2.3, base64-js@^1.3.1, base64-js@^1.5.1:
+base64-js@^1.2.3, base64-js@^1.3.0, base64-js@^1.3.1, base64-js@^1.5.1:
   version "1.5.1"
   resolved "https://registry.npmjs.org/base64-js/-/base64-js-1.5.1.tgz"
   integrity sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==
@@ -4378,6 +4378,13 @@ expo-constants@*, expo-constants@~17.0.5, expo-constants@~17.0.7:
     "@expo/config" "~10.0.10"
     "@expo/env" "~0.4.2"
 
+expo-crypto@^14.0.2:
+  version "14.0.2"
+  resolved "https://registry.npmjs.org/expo-crypto/-/expo-crypto-14.0.2.tgz"
+  integrity sha512-WRc9PBpJraJN29VD5Ef7nCecxJmZNyRKcGkNiDQC1nhY5agppzwhqh7zEzNFarE/GqDgSiaDHS8yd5EgFhP9AQ==
+  dependencies:
+    base64-js "^1.3.0"
+
 expo-file-system@~18.0.11:
   version "18.0.11"
   resolved "https://registry.npmjs.org/expo-file-system/-/expo-file-system-18.0.11.tgz"
@@ -4426,6 +4433,13 @@ expo-modules-core@2.2.2:
   dependencies:
     invariant "^2.2.4"
 
+expo-random@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.npmjs.org/expo-random/-/expo-random-14.0.1.tgz"
+  integrity sha512-gX2mtR9o+WelX21YizXUCD/y+a4ZL+RDthDmFkHxaYbdzjSYTn8u/igoje/l3WEO+/RYspmqUFa8w/ckNbt6Vg==
+  dependencies:
+    base64-js "^1.3.0"
+
 expo-router@~4.0.17:
   version "4.0.17"
   resolved "https://registry.npmjs.org/expo-router/-/expo-router-4.0.17.tgz"
@@ -4444,6 +4458,11 @@ expo-router@~4.0.17:
     schema-utils "^4.0.1"
     semver "~7.6.3"
     server-only "^0.0.1"
+
+expo-secure-store@^14.0.1:
+  version "14.0.1"
+  resolved "https://registry.npmjs.org/expo-secure-store/-/expo-secure-store-14.0.1.tgz"
+  integrity sha512-QUS+j4+UG4jRQalgnpmTvvrFnMVLqPiUZRzYPnG3+JrZ5kwVW2w6YS3WWerPoR7C6g3y/a2htRxRSylsDs+TaQ==
 
 expo-splash-screen@~0.29.22:
   version "0.29.22"

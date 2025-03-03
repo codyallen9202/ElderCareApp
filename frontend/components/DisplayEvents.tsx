@@ -38,13 +38,13 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
     {
       title: 'Lunch',
       description: 'Sandwiches today',
-      date: '2025-02-26',
+      date: '2025-03-03',
       time: '12:00 PM',
     },
     {
       title: 'Take Medications',
       description: 'Make sure to go to medicine cabinet',
-      date: '2025-02-26',
+      date: '2025-03-03',
       time: '2:00 PM',
     },
   ]);

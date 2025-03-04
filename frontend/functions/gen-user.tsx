@@ -1,40 +1,59 @@
 import * as SecureStore from 'expo-secure-store';
-import * as Random from 'expo-crypto';
-import { getFirestore, doc, setDoc, getDoc } from "firebase/firestore";
-import { app } from "./firebaseConfig"; // Your Firebase setup
+import * as ExpoCrypto from 'expo-crypto'; // Use expo-crypto for generating random bytes
+import {doc, setDoc, getDoc, collection, deleteDoc} from "firebase/firestore";
+import { db } from "../firebaseconfig";
 
-// Create UserID
-async function getUserId() {
+// Helper to convert Uint8Array to hex string
+function bytesToHex(bytes: Uint8Array): string {
+    return Array.from(bytes)
+      .map((byte) => byte.toString(16).padStart(2, "0"))  // Use hex (16) instead of octal (8)
+      .join("");
+  }
+  
+export async function getUserId() {
     let userId = await SecureStore.getItemAsync('user_id');
     if (!userId) {
-        userId = Random.getRandomBytes(16).toString();
-        await SecureStore.setItemAsync('user_id', userId);
+      const randomBytes = await ExpoCrypto.getRandomBytesAsync(12);  // Using expo-crypto for random bytes
+      userId = bytesToHex(randomBytes);
+      await SecureStore.setItemAsync('user_id', userId);
     }
-    return userId;
+  return userId;
+}
+
+export async function InitializeFirestoreUser(userID: string) {
+  const userDocRef = doc(db, "Users", userID);
+  const userDocSnap = await getDoc(userDocRef);
+  if (!userDocSnap.exists()) {
+  
+    try {
+        await setDoc(doc(db, "Users", userID), {
+        timestamp: Date.now()
+        });
+        alert('User added!');
+    
+    } catch (error) {
+        console.error("Error creating user in Firestore:", error);
+    }
+  }
 }
 
 
-// Store UserID to Firebase
-const db = getFirestore(app);
-
-async function saveUserToFirebase() {
-    const userId = await getUserId();
-    const userRef = doc(db, "users", userId);
-
-    await setDoc(userRef, { createdAt: new Date().toISOString() }, { merge: true });
+export async function saveInfo(infoArr : any,  userId : string, collection : string) {
+    const dateid = infoArr.id;
+    const addInfoRef = doc(db, 'Users', userId, collection, dateid);
+    const {id, ...infoToSave} = infoArr;
+    try{
+        await setDoc(addInfoRef, infoToSave);
+    } catch(error) {
+        console.error("Error Message: " + error);
+    }
 }
 
-
-// Retrieving data from Firebase
-async function fetchUserData() {
-    const userId = await getUserId();
-    const userRef = doc(getFirestore(), "users", userId);
-    const userSnap = await getDoc(userRef);
-
-    if (userSnap.exists()) {
-        return userSnap.data();
-    } else {
-        console.error("No user data found!");
-        return null;
+export async function deleteCaretaker(dateid : string, userId : string) {
+    try{
+        const caretakerDoc = doc(db, "Users", userId, "Caretakers", dateid);
+        await deleteDoc(caretakerDoc);
+    } catch(error) {
+        console.error("Error Message: " + error);
     }
 }

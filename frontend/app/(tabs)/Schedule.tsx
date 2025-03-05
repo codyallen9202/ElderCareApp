@@ -1,12 +1,12 @@
 // This page displays the entire schedule. It also has a modal that allows the user to 
 // add an event to the calendar. 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Platform, TextInput } from 'react-native';
 import { BlurView } from 'expo-blur';
 import HelpButton from '@/components/HelpButton';
 import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
-
+import { saveInfo, getUserId} from '@/functions/gen-user';
 const helpText = `This page displays your full schedule for the day. All appointments, reminders, and important events will be listed here in a scrollable view. Check this page daily to stay on top of your activities.`;
 
 const CalendarScreen = ({ }) => {
@@ -16,6 +16,15 @@ const CalendarScreen = ({ }) => {
   const [newEventDate, setNewEventDate] = useState('');
   const [newEventTime, setNewEventTime] = useState('');
   const [newEventDesc, setNewEventDesc] = useState('');
+  const [userID, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadUserId() {
+      const id = await getUserId();
+      setUserID(id);
+    }
+    loadUserId();
+  }, []);
 
   const handleAddingEvent = () => {
     setAddModalVisible(true); 
@@ -27,11 +36,12 @@ const CalendarScreen = ({ }) => {
     if (newEventName.trim() && newEventDate.trim() && newEventTime.trim()) {
       const newEvent = {
         id: Date.now().toString(), //  Unique ID
-        name: newEventName,
-        date: newEventDate,
-        time: newEventTime,
-        desc: newEventDesc
+        Name: newEventName,
+        Date: newEventDate,
+        Time: newEventTime,
+        Description: newEventDesc
       };
+      saveInfo(newEvent, userID!, "CalendarEvents");
       //setCaregivers(prevCaregivers => [...prevCaregivers, newCaregiver]); //  Ensure state updates correctly
       setNewEventName('');
       setNewEventDate('');
@@ -41,11 +51,12 @@ const CalendarScreen = ({ }) => {
     } else if (newEventName.trim() && newEventDate.trim() && newEventTime.trim() && newEventDesc.trim()){
       const newEvent = {
         id: Date.now().toString(), //  Unique ID
-        name: newEventName,
-        date: newEventDate,
-        time: newEventTime,
-        desc: newEventDesc
+        Name: newEventName,
+        Date: newEventDate,
+        Time: newEventTime,
+        Description: newEventDesc
       };
+      saveInfo(newEvent, userID!, "CalendarEvents");
       //setCaregivers(prevCaregivers => [...prevCaregivers, newCaregiver]); //  Ensure state updates correctly
       setNewEventName('');
       setNewEventDate('');
@@ -53,7 +64,7 @@ const CalendarScreen = ({ }) => {
       setNewEventDesc('');
       setAddModalVisible(false); //  Close modal after saving
     } else {
-      alert("Please enter both name and phone number.");
+      alert("Please enter a name, date, and time.");
     }
 
     setAddModalVisible(false);
@@ -124,27 +135,31 @@ const CalendarScreen = ({ }) => {
             <TextInput
               style={styles.input}
               placeholder="Event Name"
+              placeholderTextColor="#888"
               value={newEventName}
               onChangeText={setNewEventName}
             />
             <TextInput
               style={styles.input}
-              placeholder="Event Date"
+              placeholder="Date: yyyy-mm-dd"
+              placeholderTextColor="#888"
               value={newEventDate}
               onChangeText={setNewEventDate}
             />
             <TextInput
               style={styles.input}
               placeholder="Time of Event"
+              placeholderTextColor="#888"
               value={newEventTime}
               onChangeText={setNewEventTime}
             />
             <TextInput
               style={styles.input}
               placeholder="Description (optional)"
+              placeholderTextColor="#888"
               value={newEventDesc}
               onChangeText={setNewEventDesc}
-              keyboardType="phone-pad"
+
             />
 
             <View style={styles.modalButtons}>
@@ -213,7 +228,6 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'rgba(0,0,0,0.4)',
     backdropFilter: 'blur(10px)', 
-    WebkitBackdropFilter: 'blur(10px)', 
   },
   modalBackground: {
     position: 'absolute',

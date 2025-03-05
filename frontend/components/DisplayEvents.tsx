@@ -1,7 +1,8 @@
-// Have the calendar data in here 
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { collection, onSnapshot } from 'firebase/firestore';
+import { db } from '../firebaseconfig'; // Adjust path as needed
+import { getUserId } from '@/functions/gen-user';
 
-// Sharing data between components
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
 export const getEvents = () => {
@@ -12,42 +13,57 @@ export const getEvents = () => {
   return context;
 };
 
-// This was added because I kept getting an error when just trying to use childen belo2
-// Learned about this at https://stackoverflow.com/questions/75695037/how-to-use-an-interface-with-props-children-and-other-property-types
 interface EventsProviderProps {
   children: ReactNode;
 }
 
-// Explicit definition of an event
 interface EventType {
-  title: string;
-  description: string;
-  date: string;
-  time: string;
+  Name: string;
+  Description: string;
+  Date: string;
+  Time: string;
 }
 
-// Giving context for what the function will call
 interface EventsContextType {
   events: EventType[];
   setEvents: React.Dispatch<React.SetStateAction<EventType[]>>;
 }
 
-// Am currently using dummy data, but will soon get data from the FireBase
 export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
-  const [events, setEvents] = useState<EventType[]>([
-    {
-      title: 'Lunch',
-      description: 'Sandwiches today',
-      date: '2025-03-03',
-      time: '12:00 PM',
-    },
-    {
-      title: 'Take Medications',
-      description: 'Make sure to go to medicine cabinet',
-      date: '2025-03-03',
-      time: '2:00 PM',
-    },
-  ]);
+  const [events, setEvents] = useState<EventType[]>([]);
+
+  useEffect(() => {
+    let unsubscribe: (() => void) | undefined;
+
+    async function subscribeToEvents() {
+      const userId = await getUserId();
+      if (!userId) return;
+
+      const eventsRef = collection(db, "Users", userId, "CalendarEvents");
+      unsubscribe = onSnapshot(eventsRef, (snapshot) => {
+        const fetchedEvents: EventType[] = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            Name: data.Name || "Untitled Event",
+            Description: data.Description || "No description",
+            Date: data.Date || "Unknown Date",
+            Time: data.Time || "Unknown Time",
+          };
+        });
+        setEvents(fetchedEvents);
+      }, error => {
+        console.error("Error listening to events:", error);
+      });
+    }
+
+    subscribeToEvents();
+
+    return () => {
+      if (unsubscribe) {
+        unsubscribe();
+      }
+    };
+  }, []);
 
   return (
     <EventsContext.Provider value={{ events, setEvents }}>

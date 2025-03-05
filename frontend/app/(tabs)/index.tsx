@@ -1,17 +1,25 @@
 // index.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
-
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-
-// Import the Calendar component and EventsProvider
 import Calendar from '../../components/DisplaySchedule';
 import { EventsProvider } from '../../components/DisplayEvents';
+import {getUserId, InitializeFirestoreUser} from '../../functions/gen-user';
 
 export default function LayoutPage() {
   const router = useRouter();
+  const [userID, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function loadUserId() {
+      const id = await getUserId();
+      setUserID(id);
+      InitializeFirestoreUser(id);
+    }
+    loadUserId();
+  }, []);
 
   return (
     <EventsProvider>

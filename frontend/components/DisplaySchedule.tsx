@@ -13,7 +13,7 @@ const Calendar = ({ currentDate, dayOffset }) => {
   const formattedDate = format(date, 'yyyy-MM-dd'); 
 
   // Find today's events and then print it out
-  const eventsForDay = events.filter(event => event.date === formattedDate);
+  const eventsForDay = events.filter(event => event.Date === formattedDate);
 
   return (
     <View style={styles.dayContainer}>
@@ -23,8 +23,8 @@ const Calendar = ({ currentDate, dayOffset }) => {
       {eventsForDay.length > 0 ? (
         eventsForDay.map((event, index) => (
           <View key={index} style={styles.eventContainer}>
-            <Text style={styles.eventTitle}>{event.time}: {event.title}</Text>
-            <Text>{event.description}</Text>
+            <Text style={styles.eventTitle}>{event.Time}: {event.Name}</Text>
+            <Text>{event.Description}</Text>
           </View>
         ))
       ) : (

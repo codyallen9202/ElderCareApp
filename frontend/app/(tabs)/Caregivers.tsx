@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BlurView } from 'expo-blur';
 import {
   StyleSheet,
@@ -14,18 +14,49 @@ import {
 } from 'react-native';
 import HelpButton from '@/components/HelpButton';
 import { sendSMSBlast } from '@/components/smsBlast';
+import { saveInfo, getUserId, deleteCaretaker } from '@/functions/gen-user';
+import {collection, getDocs} from "firebase/firestore";
+import { db } from "../../firebaseconfig";
 
 
 const helpText = `This page displays a list of trusted caregivers who can assist you.
 You can view their name and phone number. Tap on "Add Caregiver" to create a new caregiver entry,
 or press "Alert All" to notify everyone at once.`;
 
+
+
 export default function CaregiversList() {
   //  **Restore default caregivers list**
+  /*
   const [caregivers, setCaregivers] = useState([
     { id: '1', name: 'Cody Allen', phone: '865-712-2138' },
     // { id: '2', name: 'Caregiver Two', phone: '987-654-3210' },
-  ]);
+  ]); */
+  const [caregivers, setCaregivers] = useState<{ id: string; name: string; phone: string }[]>([]);
+  const [userID, setUserID] = useState<string | null>(null);
+
+  useEffect(() => {
+    async function fetchCaregivers() {
+      const id = await getUserId();
+      setUserID(id);
+  
+      if (id) {
+        const caretakersRef = collection(db, "Users", id, "Caretakers");
+        const snapshot = await getDocs(caretakersRef);
+        const caregiversList = snapshot.docs.map(doc => {
+          const data = doc.data();
+          return {
+            id: doc.id,
+            name: data.name || "Unknown", // Provide a default name
+            phone: data.phone || "N/A" // Provide a default phone number
+          };
+        });
+  
+        setCaregivers(caregiversList);
+      }
+    }
+    fetchCaregivers();
+  }, []);
 
   //  **Ensure "Add Caregiver" modal opens & closes properly**
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -49,6 +80,7 @@ export default function CaregiversList() {
       setNewCaregiverName('');
       setNewCaregiverPhone('');
       setAddModalVisible(false); //  Close modal after saving
+      saveInfo(newCaregiver, userID!, "Caretakers")
     } else {
       alert("Please enter both name and phone number.");
     }
@@ -58,6 +90,7 @@ export default function CaregiversList() {
     setCaregivers(prevCaregivers =>
       prevCaregivers.filter(item => item.id !== caregiverId)
     );
+    deleteCaretaker(caregiverId, userID!);
   };
 
   // **SMS Alert to all caregivers**
@@ -119,12 +152,14 @@ export default function CaregiversList() {
             <TextInput
               style={styles.input}
               placeholder="Name"
+              placeholderTextColor="#888"
               value={newCaregiverName}
               onChangeText={setNewCaregiverName}
             />
             <TextInput
               style={styles.input}
               placeholder="Phone"
+              placeholderTextColor="#888"
               value={newCaregiverPhone}
               onChangeText={setNewCaregiverPhone}
               keyboardType="phone-pad"
@@ -264,7 +299,6 @@ const styles = StyleSheet.create({
     height: '100%',
     backgroundColor: 'rgba(0,0,0,0.4)',
     backdropFilter: 'blur(10px)',  // ✅ CSS Blur Effect (Web Only)
-    WebkitBackdropFilter: 'blur(10px)',
   },
 
   // 🔹 Modal Styling

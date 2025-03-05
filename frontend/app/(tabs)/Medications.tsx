@@ -8,12 +8,7 @@ import AddMedicationButton from '@/components/AddMedicationButton';
 import { StyleSheet, View } from 'react-native';
 
 // The help text for the page
-const helpText = `This page displays a list of medications scheduled for today. 
-                  Each medication is shown in a scrollable list. You can tap on 
-                  a medication to mark it as taken, which will toggle a checkmark 
-                  next to it. If you accidentally mark a medication, simply tap 
-                  it again to remove the checkmark. The date at the top helps 
-                  you confirm that you're viewing today's medications.`
+const helpText = "This page lists all of the medications you need to take today. When you've taken a medication, tap it, and it will turn gray. When a medication is grayed-out, that means you have taken it."
 
 // All this does is call each different component
 // Each one is housed in a <View> component to serve as

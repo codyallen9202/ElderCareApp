@@ -7,8 +7,8 @@ export default function HelpButton({ input }: { input: string }) {
             <Pressable
                 style={styles.helpButton}
                 onPress={() => {
-                    Alert.alert("Title", input)
-                    window.alert(input)
+                    Alert.alert("Page Info", input)
+                    // window.alert(input)
                 }}
             >
                 <Text style={styles.helpButtonText}>?</Text>

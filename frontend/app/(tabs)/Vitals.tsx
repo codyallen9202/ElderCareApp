@@ -29,7 +29,7 @@ export default function VitalsPage() {
       </View>
 
       <View style={styles.vitalContainer}>
-        <Text style={styles.vitalLabel}>📉 Blood Pressure:</Text>
+        <Text style={styles.vitalLabel}>📉 Blood Press:</Text>
         <Text style={styles.vitalValue}>120/80 mmHg</Text>
       </View>
 
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
   vitalContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '80%',
+    width: '90%',
     backgroundColor: '#E0BBE4',
     padding: 15,
     borderRadius: 10,

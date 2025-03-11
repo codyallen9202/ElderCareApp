@@ -10,10 +10,31 @@ export default function VitalsPage() {
 
   return (
     <View style={styles.container}>
-      <HelpButton input={helpText} />
-      <Text style={styles.title}>Vitals</Text>
+      <View style={styles.header}>
+        <HelpButton input={helpText} />
+        <Text style={styles.title}>Vitals</Text>
+      </View>
 
       <View style={styles.vitalContainer}>
+        <View style={styles.vitalsRow}>
+          <View style={styles.singleVital}>
+
+          </View>
+          <View style={styles.singleVital}>
+
+          </View>
+        </View>
+        <View style={styles.vitalsRow}>
+          <View style={styles.singleVital}>
+
+          </View>
+          <View style={styles.singleVital}>
+
+          </View>
+        </View>
+      </View>
+
+      {/* <View style={styles.vitalContainer}>
         <Text style={styles.vitalLabel}>❤️ Heart Rate:</Text>
         <Text style={styles.vitalValue}>72 bpm</Text>
       </View>
@@ -36,7 +57,7 @@ export default function VitalsPage() {
       <View style={styles.vitalContainer}>
         <Text style={styles.vitalLabel}>👣 Steps Today:</Text>
         <Text style={styles.vitalValue}>8,420</Text>
-      </View>
+      </View> */}
     </View>
   );
 }
@@ -44,33 +65,43 @@ export default function VitalsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
-    padding: 20,
+    // padding: 20,
     backgroundColor: '#F5F5F5',
+  },
+  header: {
+    flexDirection: 'row',
+    borderWidth: 3,
   },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
-    marginBottom: 30,
   },
   vitalContainer: {
+    borderWidth: 3,
+    width: '100%',
+    height: '100%',
+  },
+  vitalsRow: {
+    width: '100%',
+    height: '50%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '90%',
-    backgroundColor: '#E0BBE4',
-    padding: 15,
-    borderRadius: 10,
-    marginBottom: 15,
+    borderWidth: 3,
   },
-  vitalLabel: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#333',
-  },
-  vitalValue: {
-    fontSize: 24,
-    color: '#000',
-  },
+  singleVital: {
+    height: '100%',
+    width: '50%',
+    borderWidth: 3,
+
+  }
+  // vitalLabel: {
+  //   fontSize: 24,
+  //   fontWeight: 'bold',
+  //   color: '#333',
+  // },
+  // vitalValue: {
+  //   fontSize: 24,
+  //   color: '#000',
+  // },
 });
 

@@ -10,54 +10,87 @@ export default function VitalsPage() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <HelpButton input={helpText} />
+      {/* <View style={styles.header}>
         <Text style={styles.title}>Vitals</Text>
-      </View>
-
-      <View style={styles.vitalContainer}>
-        <View style={styles.vitalsRow}>
-          <View style={styles.singleVital}>
-
-          </View>
-          <View style={styles.singleVital}>
-
-          </View>
-        </View>
-        <View style={styles.vitalsRow}>
-          <View style={styles.singleVital}>
-
-          </View>
-          <View style={styles.singleVital}>
-
-          </View>
-        </View>
-      </View>
-
-      {/* <View style={styles.vitalContainer}>
-        <Text style={styles.vitalLabel}>❤️ Heart Rate:</Text>
-        <Text style={styles.vitalValue}>72 bpm</Text>
-      </View>
-
-      <View style={styles.vitalContainer}>
-        <Text style={styles.vitalLabel}>🩸 Blood Oxygen:</Text>
-        <Text style={styles.vitalValue}>98%</Text>
-      </View>
-
-      <View style={styles.vitalContainer}>
-        <Text style={styles.vitalLabel}>🌡 Body Temp:</Text>
-        <Text style={styles.vitalValue}>36.5°C</Text>
-      </View>
-
-      <View style={styles.vitalContainer}>
-        <Text style={styles.vitalLabel}>📉 Blood Press:</Text>
-        <Text style={styles.vitalValue}>120/80 mmHg</Text>
-      </View>
-
-      <View style={styles.vitalContainer}>
-        <Text style={styles.vitalLabel}>👣 Steps Today:</Text>
-        <Text style={styles.vitalValue}>8,420</Text>
       </View> */}
+
+      {/* Entire list of 6 boxes */}
+      <View style={styles.vitalContainer}>
+        {/* Top Row */}
+        <View style={styles.vitalsRow}>
+
+          {/* Top Left */}
+          <View style={styles.singleVital}>
+            <View style={styles.singleVitalHeader}>
+              <Text style={styles.vitalText}>Heart Rate</Text>
+            </View>
+            <View style={styles.singleVitalContent}>
+              <Text style={styles.bigText}>76</Text>
+              <Text style={styles.smallText}>Beats/Minute</Text>
+            </View>
+          </View>
+
+          {/* Top Right */}
+          <View style={styles.singleVital}>
+            <View style={styles.singleVitalHeader}>
+              <Text style={styles.vitalText}>Blood Oxygen</Text>
+            </View>
+            <View style={styles.singleVitalContent}>
+              <Text style={styles.bigText}>94%</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Middle Row */}
+        <View style={styles.vitalsRow}>
+
+          {/* Middle Left */}
+          <View style={styles.singleVital}>
+            <View style={styles.singleVitalHeader}>
+              <Text style={styles.vitalText}>Breathing Rate</Text>
+            </View>
+            <View style={styles.singleVitalContent}>
+              <Text style={styles.bigText}>15</Text>
+              <Text style={styles.smallText}>Breaths/Minute</Text>
+            </View>
+          </View>
+
+          {/* Middle Right */}
+          <View style={styles.singleVital}>
+            <View style={styles.singleVitalHeader}>
+              <Text style={styles.vitalText}>Steps</Text>
+            </View>
+            <View style={styles.singleVitalContent}>
+              <Text style={styles.bigText}>873</Text>
+            </View>
+          </View>
+        </View>
+
+        {/* Bottom Row */}
+        <View style={styles.vitalsRow}>
+
+          {/* Bottom Left */}
+          <View style={styles.singleVital}>
+            <View style={styles.singleVitalHeader}>
+              <Text style={styles.vitalText}>Calories Burned</Text>
+            </View>
+            <View style={styles.singleVitalContent}>
+              <Text style={styles.bigText}>351</Text>
+            </View>
+          </View>
+
+          {/* Bottom Right */}
+          <View style={styles.singleVital}>
+            <View style={styles.singleVitalHeader}>
+              <Text style={styles.vitalText}>Sleep Duration</Text>
+            </View>
+            <View style={styles.singleVitalContent}>
+              <Text style={styles.bigText}>7hr</Text>
+              <Text style={styles.bigText}>12min</Text>
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   );
 }
@@ -66,42 +99,60 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    // padding: 20,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: '#F4F4F4',
   },
   header: {
-    flexDirection: 'row',
-    borderWidth: 3,
+    backgroundColor: '#6F91FF',
+    width: '100%',
+    alignItems: 'center',
+    paddingBottom: 10,
   },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
+    color: '#FFF'
   },
   vitalContainer: {
-    borderWidth: 3,
     width: '100%',
     height: '100%',
   },
   vitalsRow: {
     width: '100%',
-    height: '50%',
+    height: '33.33%',
     flexDirection: 'row',
-    borderWidth: 3,
   },
   singleVital: {
     height: '100%',
     width: '50%',
-    borderWidth: 3,
-
+    borderWidth: 1.5,
+    borderColor: '#6F91FF',
+    alignItems: 'center',
+  },
+  singleVitalHeader: {
+    backgroundColor: '#6F91FF',
+    width: '100%',
+    alignItems: 'center'
+  },
+  vitalText: {
+    fontWeight: 'bold',
+    fontSize: 20,
+    color: '#FFF'
+  },
+  singleVitalContent: {
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bigText: {
+    fontSize: 55,
+    fontWeight: 'bold',
+    color: '#6F91FF'
+  },
+  smallText: {
+    fontSize: 20,
+    fontWeight: '400',
+    color: '#6F91FF'
   }
-  // vitalLabel: {
-  //   fontSize: 24,
-  //   fontWeight: 'bold',
-  //   color: '#333',
-  // },
-  // vitalValue: {
-  //   fontSize: 24,
-  //   color: '#000',
-  // },
 });
 

@@ -6,7 +6,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Calendar from '../../components/DisplaySchedule';
 import { EventsProvider } from '../../components/DisplayEvents';
-import {getUserId, InitializeFirestoreUser} from '../../functions/gen-user';
+import { getUserId, InitializeFirestoreUser } from '../../functions/gen-user';
 
 export default function LayoutPage() {
   const router = useRouter();
@@ -35,14 +35,14 @@ export default function LayoutPage() {
               style={[styles.button, styles.medicationButton]}
               onPress={() => router.push('/Medications')}
             >
-              <FontAwesome5 size={72} name="pills" color={'#fff'} />
+              <FontAwesome5 size={72} name="pills" color={'#6F91FF'} />
               <Text style={styles.buttonText}>Medications</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.button, styles.vitalsButton]}
               onPress={() => router.push('/Vitals')}
             >
-              <FontAwesome size={72} name="heartbeat" color={'#fff'} />
+              <FontAwesome size={72} name="heartbeat" color={'#6F91FF'} />
               <Text style={styles.buttonText}>Vitals</Text>
             </TouchableOpacity>
           </View>
@@ -52,14 +52,14 @@ export default function LayoutPage() {
               style={[styles.button, styles.scheduleButton]}
               onPress={() => router.push('/Schedule')}
             >
-              <FontAwesome size={72} name="calendar" color={'#fff'} />
+              <FontAwesome size={72} name="calendar" color={'#6F91FF'} />
               <Text style={styles.buttonText}>Calendar</Text>
             </TouchableOpacity>
             <TouchableOpacity
               style={[styles.button, styles.caregiversButton]}
               onPress={() => router.push('/Caregivers')}
             >
-              <FontAwesome5 size={72} name="user-friends" color={'#fff'} />
+              <FontAwesome5 size={72} name="user-friends" color={'#6F91FF'} />
               <Text style={styles.buttonText}>Caregivers</Text>
             </TouchableOpacity>
           </View>
@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   calendar: {
     width: '100%',
     height: '50%',
-    backgroundColor: '#FFFFC5', // Yellow
+    backgroundColor: '#FFF', // Yellow
   },
   buttonContainer: {
     width: '100%',
@@ -95,22 +95,26 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: '#6F91FF',
   },
   buttonText: {
-    color: '#fff',
+    color: '#6F91FF',
     fontSize: 24,
     fontWeight: 'bold',
   },
   scheduleButton: {
-    backgroundColor: '#FFD700', // Yellow
+    backgroundColor: '#FFF',
   },
   medicationButton: {
-    backgroundColor: '#008000', // Green
+    backgroundColor: '#FFF',
+    borderTopWidth: 3,
   },
   caregiversButton: {
-    backgroundColor: '#6F91FF', // Blue
+    backgroundColor: '#FFF',
   },
   vitalsButton: {
-    backgroundColor: '#D1001F', // Red
+    backgroundColor: '#FFF',
+    borderTopWidth: 3,
   },
 });

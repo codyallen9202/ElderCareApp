@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         paddingBottom: 110,
+        paddingTop: 20,
         backgroundColor: "#f4f4f4",
     },
     medItem: {

@@ -134,7 +134,6 @@ const styles = StyleSheet.create({
     right: 10,
   },
   medListContainer: {
-    marginTop: 60,
     width: '100%',
     height: '100%',
   },

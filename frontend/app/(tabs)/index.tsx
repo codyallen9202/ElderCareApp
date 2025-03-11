@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
   calendar: {
     width: '100%',
     height: '50%',
-    backgroundColor: '#FFF', // Yellow
+    backgroundColor: '#FFF',
   },
   buttonContainer: {
     width: '100%',

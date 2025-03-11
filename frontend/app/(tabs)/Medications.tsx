@@ -6,7 +6,7 @@ import HelpButton from '@/components/HelpButton';
 import DateDisplay from '@/components/DateDisplay';
 import AddMedicationButton from '@/components/AddMedicationButton';
 import { saveInfo, getUserId, deleteCaretaker } from '@/functions/gen-user';
-import {collection, getDocs} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 import { db } from "../../firebaseconfig";
 
 export default function MedicationsPage() {
@@ -34,7 +34,7 @@ export default function MedicationsPage() {
   const handleSaveMedication = () => {
     if (newMedName.trim() && newMedTime.trim()) {
       const medInfo = {
-        id: Date.now().toString(), 
+        id: Date.now().toString(),
         name: newMedName,
         time: newMedTime
       }
@@ -114,13 +114,14 @@ export default function MedicationsPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    backgroundColor: '#F4F4F4',
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    position: 'relative'
+    position: 'relative',
   },
   helpButton: {
     position: 'absolute',

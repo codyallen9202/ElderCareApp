@@ -10,13 +10,15 @@ import { saveInfo, getUserId} from '@/functions/gen-user';
 const helpText = `This page displays your full schedule for the day. All appointments, reminders, and important events will be listed here in a scrollable view. Check this page daily to stay on top of your activities.`;
 
 const CalendarScreen = ({ }) => {
-  //const [date, setDate] = useState(new Date())
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [newEventName, setNewEventName] = useState('');
   const [newEventDate, setNewEventDate] = useState('');
   const [newEventTime, setNewEventTime] = useState('');
   const [newEventDesc, setNewEventDesc] = useState('');
   const [userID, setUserID] = useState<string | null>(null);
+  const [currentDate] = useState(new Date());
+  const [startDay, setStartDay] = useState(0);
+  const [daysList, setDaysList] = useState([...Array(30).keys()]); 
 
   useEffect(() => {
     async function loadUserId() {
@@ -74,18 +76,14 @@ const CalendarScreen = ({ }) => {
     setAddModalVisible(false); 
   };
 
-  const [currentDate] = useState(new Date());
-  const [daysList, setDaysList] = useState([...Array(30).keys()]); 
-  const [, setDayRange] = useState([0, 29]); // Load in 30 days of a time  
+  const nextDays = () => {
+    setStartDay(prevStart => prevStart + 30);
+    setDaysList([...Array(30).keys()].map(i => i + startDay));
+  };
 
-  // Everytime the user gets to the end the the list of 30 days,
-  // append 30 days so it's an infinitely scrollable list
-  // Learned more about: https://stackoverflow.com/questions/70721232/loading-more-data-onendreached-in-a-react-native-flatlist-is-scrolling-to-top-of
-  const loadNextDays = () => {
-    setDaysList(prevList => [
-      ...prevList, ...[...Array(30).keys()].map(i => i + prevList.length)
-    ]);
-    setDayRange(previousDays => [previousDays[1] + 1, previousDays[1] + 30]);
+  const prevDays = () => {
+    setStartDay(prevStart => Math.max(prevStart - 30, 0)); 
+    setDaysList([...Array(30).keys()].map(i => i + startDay));
   };
 
   return (
@@ -93,24 +91,29 @@ const CalendarScreen = ({ }) => {
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.text}>Schedule</Text>
-
           <TouchableOpacity onPress={handleAddingEvent} style={styles.addEventButton}>
             <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
-
           <HelpButton input={helpText} />
+      </View>
+
+        <View style={styles.navigation}>
+          <TouchableOpacity onPress={prevDays} style={styles.navButton}>
+            <Text style={styles.navButtonText}>Prev</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={nextDays} style={styles.navButton}>
+            <Text style={styles.navButtonText}>Next</Text>
+          </TouchableOpacity>
         </View>
 
-        {/* Flatlist for vertial (infinite) scrolling: https://reactnative.dev/docs/flatlist#horizontal */}
         <FlatList
           data={daysList}
           renderItem={({ item }) => (
             <Calendar currentDate={currentDate} dayOffset={item} />
           )}
-          onEndReached={loadNextDays}
-          // Load more days when user is 30% down the current list: https://stackoverflow.com/questions/39366356/what-onendreachedthreshold-really-means-in-react-native
-          onEndReachedThreshold={0.3}
+          keyExtractor={(item) => item.toString()}
         />
+
       </View>
 
       {/* Modal */}
@@ -194,6 +197,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
+    width: '100%',
   },
   addEventButton: {
     padding: 10,
@@ -201,11 +205,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
+    marginLeft: 10,
   },
   buttonText: {
-    fontSize: 30,
+    fontSize: 15,
     color: 'black',
     fontWeight: 'bold',
   },
@@ -282,6 +287,26 @@ const styles = StyleSheet.create({
   modalButtonText: {
     color: '#fff',
     fontSize: 24,
+    fontWeight: 'bold',
+  },
+  navigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%', 
+    marginTop: 10,
+  },
+  navButton: {
+    flex: 1,
+    backgroundColor: '#4CAF50',
+    paddingVertical: 10,
+    paddingHorizontal: 15, 
+    borderRadius: 10,
+    alignItems: 'center',
+    marginHorizontal: 5,
+  },
+  navButtonText: {
+    color: '#fff',
+    fontSize: 18,
     fontWeight: 'bold',
   },
 });

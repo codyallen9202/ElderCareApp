@@ -7,6 +7,8 @@ import HelpButton from '@/components/HelpButton';
 import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
 import { saveInfo, getUserId} from '@/functions/gen-user';
+import NeatDatePicker from 'react-native-neat-date-picker';
+
 const helpText = `This page displays your full schedule for the day. All appointments, reminders, and important events will be listed here in a scrollable view. Check this page daily to stay on top of your activities.`;
 
 const CalendarScreen = ({ }) => {
@@ -18,7 +20,9 @@ const CalendarScreen = ({ }) => {
   const [userID, setUserID] = useState<string | null>(null);
   const [currentDate] = useState(new Date());
   const [startDay, setStartDay] = useState(0);
-  const [daysList, setDaysList] = useState([...Array(30).keys()]); 
+  const [daysList, setDaysList] = useState([...Array(30).keys()]);
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState(''); 
 
   useEffect(() => {
     async function loadUserId() {
@@ -86,6 +90,20 @@ const CalendarScreen = ({ }) => {
     setDaysList([...Array(30).keys()].map(i => i + startDay));
   };
 
+  const openDatePicker = () => {
+    setShowDatePicker(true);
+  };
+
+  const cancelChoosingDate = () => {
+    setShowDatePicker(false);
+  };
+
+  const saveDate = (output) => {
+    setShowDatePicker(false);
+    setNewEventDate(output.dateString);
+    setSelectedDate(output.dateString)
+  };
+
   return (
     <EventsProvider>
       <View style={styles.container}>
@@ -142,12 +160,21 @@ const CalendarScreen = ({ }) => {
               value={newEventName}
               onChangeText={setNewEventName}
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Date: yyyy-mm-dd"
-              placeholderTextColor="#888"
-              value={newEventDate}
-              onChangeText={setNewEventDate}
+            <TouchableOpacity onPress={openDatePicker} style={{width: '100%'}}>
+              <TextInput
+                style={styles.input}
+                placeholder="Select Date"
+                placeholderTextColor="#888"
+                value={selectedDate}
+                editable={false}
+              />
+            </TouchableOpacity>
+            {/* Learned more about the date picker: https://github.com/roto93/react-native-neat-date-picker */}
+            <NeatDatePicker
+              isVisible={showDatePicker}
+              onCancel={cancelChoosingDate}
+              onConfirm={saveDate}
+              mode={'single'} 
             />
             <TextInput
               style={styles.input}

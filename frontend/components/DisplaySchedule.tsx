@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   highlight: {
-    backgroundColor: '#FDFD96',
+    backgroundColor: '##FDFD96',
     borderRadius: 5,
     borderWidth: 2,
   }

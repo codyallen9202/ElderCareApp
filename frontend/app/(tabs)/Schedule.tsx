@@ -252,7 +252,7 @@ const styles = StyleSheet.create({
   },
   addEventButton: {
     padding: 10,
-    backgroundColor: '#ffee8c',
+    backgroundColor:'#ADD8E6',
     borderRadius: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -345,6 +345,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%', 
     marginTop: 10,
+    marginBottom: 10,
   },
   navButton: {
     flex: 1,

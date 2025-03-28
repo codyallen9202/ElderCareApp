@@ -1,7 +1,7 @@
 // How we are styling the calendar events that we load onto the calendar
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { format, addDays } from 'date-fns';
+import { format, addDays, isToday } from 'date-fns';
 import { getEvents } from './DisplayEvents'; // To access events for each day
 
 
@@ -16,7 +16,7 @@ const Calendar = ({ currentDate, dayOffset }) => {
   const eventsForDay = events.filter(event => event.Date === formattedDate);
 
   return (
-    <View style={styles.dayContainer}>
+    <View style={[styles.dayContainer, isToday(date) && styles.highlight]}>
       {/* MMMM gives us the month name instead of a number */}
       <Text style={styles.dateText}>{format(date, 'MMMM dd, yyyy')}</Text>
       
@@ -54,6 +54,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  highlight: {
+    backgroundColor: '#FDFD96',
+    borderRadius: 5,
+    borderWidth: 2,
+  }
 });
 
 export default Calendar;

@@ -8,6 +8,7 @@ import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
 import { saveInfo, getUserId} from '@/functions/gen-user';
 import NeatDatePicker from 'react-native-neat-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 const helpText = `This page displays your full schedule for the day. All appointments, reminders, and important events will be listed here in a scrollable view. Check this page daily to stay on top of your activities.`;
 
@@ -22,7 +23,7 @@ const CalendarScreen = ({ }) => {
   const [startDay, setStartDay] = useState(0);
   const [daysList, setDaysList] = useState([...Array(30).keys()]);
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedDate, setSelectedDate] = useState(''); 
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   useEffect(() => {
     async function loadUserId() {
@@ -34,10 +35,12 @@ const CalendarScreen = ({ }) => {
 
   const handleAddingEvent = () => {
     setAddModalVisible(true); 
+    setShowDatePicker(false);
+    setShowTimePicker(false);
   };
 
   const handleSaveEvent = () => {
-    // Save caregiver logic
+    // Save event logic
     console.log('Saving event', newEventName, newEventDate, newEventTime, newEventDesc);
     if (newEventName.trim() && newEventDate.trim() && newEventTime.trim()) {
       const newEvent = {
@@ -90,10 +93,6 @@ const CalendarScreen = ({ }) => {
     setDaysList([...Array(30).keys()].map(i => i + startDay));
   };
 
-  const openDatePicker = () => {
-    setShowDatePicker(true);
-  };
-
   const cancelChoosingDate = () => {
     setShowDatePicker(false);
   };
@@ -101,7 +100,18 @@ const CalendarScreen = ({ }) => {
   const saveDate = (output) => {
     setShowDatePicker(false);
     setNewEventDate(output.dateString);
-    setSelectedDate(output.dateString)
+  };
+
+  const saveEventTime = (date, selectedTime) => {
+    setShowTimePicker(false);
+    if (selectedTime) {
+      const formattedTime = selectedTime.toLocaleTimeString([], {
+        hour: '2-digit', 
+        minute: '2-digit'
+      });
+      setNewEventTime(formattedTime);
+    }
+    setShowTimePicker(false);
   };
 
   return (
@@ -160,36 +170,50 @@ const CalendarScreen = ({ }) => {
               value={newEventName}
               onChangeText={setNewEventName}
             />
-            <TouchableOpacity onPress={openDatePicker} style={{width: '100%'}}>
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{width: '100%'}}>
               <TextInput
                 style={styles.input}
-                placeholder="Select Date"
+                placeholder="Event Date"
                 placeholderTextColor="#888"
-                value={selectedDate}
+                value={newEventDate}
                 editable={false}
               />
             </TouchableOpacity>
-            {/* Learned more about the date picker: https://github.com/roto93/react-native-neat-date-picker */}
+            {/* Learned more about the neat date picker: https://github.com/roto93/react-native-neat-date-picker */}
+            {/* Believe the look of this is cleaner and easier to look at for those who are older than the date picker
+                from the React Native library */}
             <NeatDatePicker
               isVisible={showDatePicker}
               onCancel={cancelChoosingDate}
               onConfirm={saveDate}
               mode={'single'} 
             />
-            <TextInput
-              style={styles.input}
-              placeholder="Time of Event"
-              placeholderTextColor="#888"
-              value={newEventTime}
-              onChangeText={setNewEventTime}
-            />
+            <TouchableOpacity onPress={() => setShowTimePicker(true)} style={{width: '100%'}}>
+              <TextInput
+                style={styles.input}
+                placeholder="Time of Event"
+                placeholderTextColor="#888"
+                value={newEventTime}
+                editable={false}
+              />
+            {/*Learned about date/time picker: https://github.com/react-native-datetimepicker/datetimepicker */}
+            </TouchableOpacity>
+            {showTimePicker && (
+              <DateTimePicker
+                testID="timePicker"
+                value = {new Date()}
+                mode="time"
+                is24Hour={false} // It shows just the 12 hour and then AM/PM (may be easier for the elderly to choose)
+                display="default"
+                onChange={saveEventTime}
+              />
+            )}
             <TextInput
               style={styles.input}
               placeholder="Description (optional)"
               placeholderTextColor="#888"
               value={newEventDesc}
               onChangeText={setNewEventDesc}
-
             />
 
             <View style={styles.modalButtons}>

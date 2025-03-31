@@ -3,14 +3,11 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Platform, TextInput } from 'react-native';
 import { BlurView } from 'expo-blur';
-import HelpButton from '@/components/HelpButton';
 import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
 import { saveInfo, getUserId} from '@/functions/gen-user';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-
-const helpText = `This page displays your full schedule for the day. All appointments, reminders, and important events will be listed here in a scrollable view. Check this page daily to stay on top of your activities.`;
 
 const CalendarScreen = ({ }) => {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -24,6 +21,17 @@ const CalendarScreen = ({ }) => {
   const [daysList, setDaysList] = useState([...Array(30).keys()]);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [tutorialMode, setTutorialMode] = useState(false);
+  const [clickedElements, setClickedElements] = useState({});
+  const [buttonExplanation, setButtonExplanation] = useState(null);
+
+  const tutorialStatements = {
+    addEvent: "Add a new event to your calendar",
+    prevButton: "View the previous 30 days",
+    nextButton: "View the next 30 days",
+    calendar: "View the events you have inputted to your calendar",
+    helpButton: "Click this button to turn on tutorial mode and also to turn it off",
+  };
 
   useEffect(() => {
     async function loadUserId() {
@@ -75,7 +83,7 @@ const CalendarScreen = ({ }) => {
     } else {
       alert("Please enter a name, date, and time.");
     }
-
+      
     setAddModalVisible(false);
   };
 
@@ -114,34 +122,115 @@ const CalendarScreen = ({ }) => {
     setShowTimePicker(false);
   };
 
+  const toggleTutorialMode = () => {
+    setTutorialMode(prevMode => !prevMode);
+    setClickedElements({});
+    setButtonExplanation(null);
+  };
+
+  const handleTutorialButtonClick = (elementId) => {
+    if (!tutorialMode) return;
+
+    // Set the current clicked-on button in tutorial mode so that we can show
+    // the text that is associated with it
+    // Can click and unclick a button this way
+    setClickedElements(prev => {
+      if (prev[elementId]) {
+        return {};
+      }
+      return { [elementId]: true };
+    });
+
+    setButtonExplanation(prev => prev === elementId ? null : elementId);
+  };
+
+  const getTutorialStyle = (elementId) => {
+    if (!tutorialMode) return {};
+    
+    // The elements in tutorial mode that we can click on will have a red border. When you cick on it,
+    // it will change to a ligher orange color
+    return {
+      borderWidth: 4,
+      borderColor: clickedElements[elementId] ? '#FFC067' : '#FF0000', 
+      borderStyle: 'solid',
+    };
+  };
+
   return (
     <EventsProvider>
       <View style={styles.container}>
         <View style={styles.header}>
           <Text style={styles.text}>Schedule</Text>
-          <TouchableOpacity onPress={handleAddingEvent} style={styles.addEventButton}>
-            <Text style={styles.buttonText}>+</Text>
+          <TouchableOpacity 
+            onPress={tutorialMode ? () => handleTutorialButtonClick('addEvent') : handleAddingEvent}
+            style={[styles.addEventButton, getTutorialStyle('addEvent')]}
+          >
+          <Text style={styles.buttonText}>+</Text>
           </TouchableOpacity>
-          <HelpButton input={helpText} />
-      </View>
+          <TouchableOpacity 
+            onPress={toggleTutorialMode} 
+            style={[styles.helpButton, getTutorialStyle('helpButton')]}
+          >
+            <Text style={styles.helpButtonText}>?</Text>
+          </TouchableOpacity>
+        </View>
+
+        {/* Following is for tutorial mode */}
+        {tutorialMode && buttonExplanation && (
+          <View style={styles.tutorialStyle}>
+            <Text style={styles.tutorialText}>{tutorialStatements[buttonExplanation]}</Text>
+          </View>
+        )}
+
+        {tutorialMode && !buttonExplanation && (
+          <View style={styles.tutorialStyle}>
+            <Text style={styles.tutorialText}>{tutorialStatements.helpButton}</Text>
+          </View>
+        )}
 
         <View style={styles.navigation}>
-          <TouchableOpacity onPress={prevDays} style={styles.navButton}>
+          <TouchableOpacity 
+            onPress={tutorialMode ? () => handleTutorialButtonClick('prevButton') : prevDays}
+            style={[styles.navButton, getTutorialStyle('prevButton')]}
+          >
             <Text style={styles.navButtonText}>Prev</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={nextDays} style={styles.navButton}>
+          <TouchableOpacity 
+            onPress={tutorialMode ? () => handleTutorialButtonClick('nextButton') : nextDays}
+            style={[styles.navButton, getTutorialStyle('nextButton')]}
+          >
             <Text style={styles.navButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
 
-        <FlatList
-          data={daysList}
-          renderItem={({ item }) => (
-            <Calendar currentDate={currentDate} dayOffset={item} />
-          )}
-          keyExtractor={(item) => item.toString()}
-        />
-
+        {tutorialMode ? (
+          <TouchableOpacity 
+            style={[styles.calendarContainer, getTutorialStyle('calendar')]}
+            onPress={() => handleTutorialButtonClick('calendar')}
+            activeOpacity={0.7}
+          >
+            <FlatList
+              data={daysList}
+              renderItem={({ item }) => (
+                <Calendar currentDate={currentDate} dayOffset={item} />
+              )}
+              keyExtractor={(item) => item.toString()}
+              scrollEnabled={false}
+            />
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.calendarContainer}>
+            <FlatList
+              data={daysList}
+              renderItem={({ item }) => (
+                <Calendar currentDate={currentDate} dayOffset={item} />
+              )}
+              keyExtractor={(item) => item.toString()}
+              showsVerticalScrollIndicator={true}
+              scrollEnabled={true}
+            />
+          </View>
+        )}
       </View>
 
       {/* Modal */}
@@ -260,15 +349,23 @@ const styles = StyleSheet.create({
     height: 50,
     marginLeft: 10,
   },
+  helpButton: {
+    width: 60,
+    height: 60,
+    backgroundColor: 'transparent',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  helpButtonText: {
+    color: '#D1001F',
+    fontSize: 48,
+    fontWeight: 'bold',
+  },
   buttonText: {
     fontSize: 15,
     color: 'black',
     fontWeight: 'bold',
-  },
-  monthText: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    marginBottom: 20,
   },
   modalWrapper: {
     flex: 1,
@@ -361,6 +458,23 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  tutorialStyle: {
+    backgroundColor: 'rgba(0,0,0,0.8)',
+    borderRadius: 10,
+    padding: 15,
+    marginBottom: 15,
+  },
+  tutorialText: {
+    color: 'white',
+    fontSize: 18,
+    lineHeight: 24,
+  },
+  calendarContainer: {
+    flex: 1,
+    borderRadius: 10,
+    padding: 5,
+    overflow: 'hidden', 
+  }
 });
 
 export default CalendarScreen;

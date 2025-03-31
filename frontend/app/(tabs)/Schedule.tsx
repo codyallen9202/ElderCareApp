@@ -8,6 +8,7 @@ import { EventsProvider } from '@/components/DisplayEvents';
 import { saveInfo, getUserId} from '@/functions/gen-user';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import TutorialModeUI from '@/components/TutorialModeUI';
 
 const CalendarScreen = ({ }) => {
   const [addModalVisible, setAddModalVisible] = useState(false);
@@ -175,18 +176,12 @@ const CalendarScreen = ({ }) => {
           </TouchableOpacity>
         </View>
 
-        {/* Following is for tutorial mode */}
-        {tutorialMode && buttonExplanation && (
-          <View style={styles.tutorialStyle}>
-            <Text style={styles.tutorialText}>{tutorialStatements[buttonExplanation]}</Text>
-          </View>
-        )}
-
-        {tutorialMode && !buttonExplanation && (
-          <View style={styles.tutorialStyle}>
-            <Text style={styles.tutorialText}>{tutorialStatements.helpButton}</Text>
-          </View>
-        )}
+        <TutorialModeUI 
+          text={tutorialMode 
+            ? tutorialStatements[buttonExplanation] || tutorialStatements.helpButton 
+            : null
+          }
+        />
 
         <View style={styles.navigation}>
           <TouchableOpacity 

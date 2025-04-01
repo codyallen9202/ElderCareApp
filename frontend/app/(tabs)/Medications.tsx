@@ -5,12 +5,10 @@ import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
 import DateDisplay from '@/components/DateDisplay';
 import AddMedicationButton from '@/components/AddMedicationButton';
-import { saveInfo, getUserId, deleteCaretaker } from '@/functions/gen-user';
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../../firebaseconfig";
+import { saveInfo, getUserId } from '@/functions/gen-user';
+import { MedicationsProvider } from '../../components/MedicationsProvider';
 
 export default function MedicationsPage() {
-
   // Modal state and input fields for new medication
   const [modalVisible, setModalVisible] = useState(false);
   const [newMedName, setNewMedName] = useState('');
@@ -36,11 +34,12 @@ export default function MedicationsPage() {
       const medInfo = {
         id: Date.now().toString(),
         name: newMedName,
-        time: newMedTime
-      }
+        time: newMedTime,
+        // You may also want to store pillColor and days here if applicable
+      };
       console.log("Saving new medication:", { name: newMedName, time: newMedTime });
-      // Add your logic to update the medications list or backend here
-      saveInfo(medInfo, userID!, "Medications")
+      // Update the medications list in Firestore (assumes your saveInfo function handles this)
+      saveInfo(medInfo, userID!, "Medications");
 
       // Reset inputs and close modal
       setNewMedName('');
@@ -52,62 +51,64 @@ export default function MedicationsPage() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <DateDisplay />
-        <View style={styles.helpButton}>
-          <HelpButton input="This page lists all of the medications you need to take today. When you've taken a medication, tap it, and it will turn gray." />
-        </View>
-        <View style={styles.addButton}>
-          {/* Pass the modal opening function to the plus button */}
-          <AddMedicationButton onPress={handleAddMedication} />
-        </View>
-      </View>
-      <View style={styles.medListContainer}>
-        <MedList />
-      </View>
-
-      {/* Modal for adding a new medication */}
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalWrapper}>
-          {Platform.OS === 'web' ? (
-            <View style={styles.modalBackgroundFallback} />
-          ) : (
-            <BlurView intensity={50} style={styles.modalBackground} />
-          )}
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Add New Medication</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Medication Name"
-              placeholderTextColor="#888"
-              value={newMedName}
-              onChangeText={setNewMedName}
-            />
-            <TextInput
-              style={styles.input}
-              placeholder="Time (e.g., 08:00 AM)"
-              placeholderTextColor="#888"
-              value={newMedTime}
-              onChangeText={setNewMedTime}
-            />
-            <View style={styles.modalButtons}>
-              <TouchableOpacity style={styles.modalButton} onPress={handleSaveMedication}>
-                <Text style={styles.modalButtonText}>✔ Save</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
-                <Text style={styles.modalButtonText}>✖ Cancel</Text>
-              </TouchableOpacity>
-            </View>
+    // Wrap the content with MedicationsProvider so that MedList can access the context
+    <MedicationsProvider>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <DateDisplay />
+          <View style={styles.helpButton}>
+            <HelpButton input="This page lists all of the medications you need to take today. When you've taken a medication, tap it, and it will turn gray." />
+          </View>
+          <View style={styles.addButton}>
+            <AddMedicationButton onPress={handleAddMedication} />
           </View>
         </View>
-      </Modal>
-    </View>
+        <View style={styles.medListContainer}>
+          <MedList />
+        </View>
+
+        {/* Modal for adding a new medication */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalWrapper}>
+            {Platform.OS === 'web' ? (
+              <View style={styles.modalBackgroundFallback} />
+            ) : (
+              <BlurView intensity={50} style={styles.modalBackground} />
+            )}
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Add New Medication</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="Medication Name"
+                placeholderTextColor="#888"
+                value={newMedName}
+                onChangeText={setNewMedName}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Time (e.g., 08:00 AM)"
+                placeholderTextColor="#888"
+                value={newMedTime}
+                onChangeText={setNewMedTime}
+              />
+              <View style={styles.modalButtons}>
+                <TouchableOpacity style={styles.modalButton} onPress={handleSaveMedication}>
+                  <Text style={styles.modalButtonText}>✔ Save</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
+                  <Text style={styles.modalButtonText}>✖ Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </Modal>
+      </View>
+    </MedicationsProvider>
   );
 }
 

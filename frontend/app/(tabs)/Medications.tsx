@@ -113,14 +113,14 @@ export default function MedicationsPage() {
           >
             <MedList />
             <View style={styles.addButton}>
-              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)} />
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setModalVisible(true)} />
             </View>
           </TouchableOpacity>
         ) : (
           <View style={styles.medListContainer}>
             <MedList />
             <View style={styles.addButton}>
-              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)} />
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setModalVisible(true)} />
             </View>
           </View>
 

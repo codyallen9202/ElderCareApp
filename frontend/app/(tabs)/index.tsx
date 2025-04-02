@@ -7,6 +7,8 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Calendar from '../../components/DisplaySchedule';
 import { EventsProvider } from '../../components/DisplayEvents';
 import { getUserId, InitializeFirestoreUser } from '../../functions/gen-user';
+import HeaderDisplay from '@/components/HeaderDisplay';
+import HomePageSchedule from '@/components/HomePageSchedule';
 
 export default function LayoutPage() {
   const router = useRouter();
@@ -25,8 +27,13 @@ export default function LayoutPage() {
     <EventsProvider>
       <View style={styles.container}>
         {/* Calendar section showing today's events */}
+        <View style={styles.header}>
+          <HeaderDisplay pageTitle={'Home'} />
+        </View>
+
         <View style={styles.calendar}>
-          <Calendar currentDate={new Date()} dayOffset={0} />
+          <HomePageSchedule currentDate={new Date()} dayOffset={0} />
+          {/* <Calendar currentDate={new Date()} dayOffset={0} /> */}
         </View>
 
         <View style={styles.buttonContainer}>
@@ -72,17 +79,24 @@ export default function LayoutPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexDirection: 'column',
+    backgroundColor: '#F4F4F4',
+  },
+  header: {
+    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'flex-start',
+    justifyContent: 'center',
+    position: 'relative',
   },
   calendar: {
     width: '100%',
-    height: '50%',
-    backgroundColor: '#FFF',
+    // backgroundColor: '#FFF',
   },
   buttonContainer: {
     width: '100%',
     height: '50%',
+    position: 'absolute',
+    bottom: 0,
   },
   buttonRow: {
     flexDirection: 'row',

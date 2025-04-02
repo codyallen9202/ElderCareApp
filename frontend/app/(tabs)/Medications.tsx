@@ -4,9 +4,9 @@ import { BlurView } from 'expo-blur';
 import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
 import DateDisplay from '@/components/DateDisplay';
-import AddMedicationButton from '@/components/AddMedicationButton';
 import { saveInfo, getUserId } from '@/functions/gen-user';
 import { MedicationsProvider } from '../../components/MedicationsProvider';
+import PlusButton from '@/components/PlusButton';
 
 export default function MedicationsPage() {
   // Modal state and input fields for new medication
@@ -60,7 +60,7 @@ export default function MedicationsPage() {
             <HelpButton input="This page lists all of the medications you need to take today. When you've taken a medication, tap it, and it will turn gray." />
           </View>
           <View style={styles.addButton}>
-            <AddMedicationButton onPress={handleAddMedication} />
+            <PlusButton onPress={handleAddMedication} />
           </View>
         </View>
         <View style={styles.medListContainer}>

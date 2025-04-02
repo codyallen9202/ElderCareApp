@@ -2,7 +2,7 @@ import React from "react";
 import { StyleSheet, View, Pressable } from 'react-native';
 import AntDesign from '@expo/vector-icons/AntDesign';
 
-export default function AddMedicationButton({ onPress }) {
+export default function PlusButton({ onPress }) {
     return (
         <View>
             <Pressable style={styles.addButton} onPress={onPress}>

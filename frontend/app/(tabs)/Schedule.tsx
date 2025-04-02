@@ -1,248 +1,188 @@
 // This page displays the entire schedule. It also has a modal that allows the user to 
 // add an event to the calendar. 
+
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Modal, Platform, TextInput } from 'react-native';
+import {
+  View, Text, StyleSheet, FlatList, TouchableOpacity,
+  Modal, Platform, TextInput
+} from 'react-native';
 import { BlurView } from 'expo-blur';
 import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
-import { saveInfo, getUserId} from '@/functions/gen-user';
+import { saveInfo, getUserId } from '@/functions/gen-user';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import TutorialModeUI from '@/components/TutorialModeUI';
+import PlusButton from '@/components/PlusButton';
 
-const CalendarScreen = ({ }) => {
+export default function Schedule() {
+  // Event modal and form state
   const [addModalVisible, setAddModalVisible] = useState(false);
-  const [newEventName, setNewEventName] = useState('');
-  const [newEventDate, setNewEventDate] = useState('');
-  const [newEventTime, setNewEventTime] = useState('');
-  const [newEventDesc, setNewEventDesc] = useState('');
-  const [userID, setUserID] = useState<string | null>(null);
-  const [currentDate] = useState(new Date());
+  const [event, setEvent] = useState({ name: '', date: '', time: '', desc: '' });
+
+  // User and calendar state
+  const [userID, setUserID] = useState(null);
   const [startDay, setStartDay] = useState(0);
   const [daysList, setDaysList] = useState([...Array(30).keys()]);
+
+  // Date/time picker visibility
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+
+  // Tutorial mode state
   const [tutorialMode, setTutorialMode] = useState(false);
   const [clickedElements, setClickedElements] = useState({});
   const [buttonExplanation, setButtonExplanation] = useState(null);
 
+  // Statements for tutorial guidance
   const tutorialStatements = {
-    addEvent: "Add a new event to your calendar",
-    prevButton: "View the previous 30 days",
-    nextButton: "View the next 30 days",
-    calendar: "View the events you have inputted to your calendar",
-    helpButton: "Click this button to turn on tutorial mode and also to turn it off",
+    addEvent: 'Add a new event to your calendar',
+    prevButton: 'View the previous 30 days',
+    nextButton: 'View the next 30 days',
+    calendar: 'View the events you have inputted to your calendar',
+    helpButton: 'Click this button to turn on tutorial mode and also to turn it off',
   };
 
+  // Fetch user ID on mount
   useEffect(() => {
-    async function loadUserId() {
-      const id = await getUserId();
-      setUserID(id);
-    }
-    loadUserId();
+    getUserId().then(setUserID);
   }, []);
 
-  const handleAddingEvent = () => {
-    setAddModalVisible(true); 
-    setShowDatePicker(false);
-    setShowTimePicker(false);
-  };
+  // Handle form field updates
+  const updateEvent = (key, value) => setEvent(prev => ({ ...prev, [key]: value }));
 
+  // Validate and save event
   const handleSaveEvent = () => {
-    // Save event logic
-    console.log('Saving event', newEventName, newEventDate, newEventTime, newEventDesc);
-    if (newEventName.trim() && newEventDate.trim() && newEventTime.trim()) {
+    const { name, date, time, desc } = event;
+    if (name.trim() && date.trim() && time.trim()) {
       const newEvent = {
-        id: Date.now().toString(), //  Unique ID
-        Name: newEventName,
-        Date: newEventDate,
-        Time: newEventTime,
-        Description: newEventDesc
+        id: Date.now().toString(),
+        Name: name,
+        Date: date,
+        Time: time,
+        Description: desc,
       };
-      saveInfo(newEvent, userID!, "CalendarEvents");
-      //setCaregivers(prevCaregivers => [...prevCaregivers, newCaregiver]); //  Ensure state updates correctly
-      setNewEventName('');
-      setNewEventDate('');
-      setNewEventTime('');
-      setNewEventDesc('');
-      setAddModalVisible(false); //  Close modal after saving
-    } else if (newEventName.trim() && newEventDate.trim() && newEventTime.trim() && newEventDesc.trim()){
-      const newEvent = {
-        id: Date.now().toString(), //  Unique ID
-        Name: newEventName,
-        Date: newEventDate,
-        Time: newEventTime,
-        Description: newEventDesc
-      };
-      saveInfo(newEvent, userID!, "CalendarEvents");
-      //setCaregivers(prevCaregivers => [...prevCaregivers, newCaregiver]); //  Ensure state updates correctly
-      setNewEventName('');
-      setNewEventDate('');
-      setNewEventTime('');
-      setNewEventDesc('');
-      setAddModalVisible(false); //  Close modal after saving
+      saveInfo(newEvent, userID, 'CalendarEvents');
+      setEvent({ name: '', date: '', time: '', desc: '' });
+      setAddModalVisible(false);
     } else {
-      alert("Please enter a name, date, and time.");
+      alert('Please enter a name, date, and time.');
     }
-      
-    setAddModalVisible(false);
   };
 
-  const handleCancel = () => {
-    setAddModalVisible(false); 
+  // Shift visible days range
+  const updateDays = (dir) => {
+    const newStart = Math.max(startDay + (dir * 30), 0);
+    setStartDay(newStart);
+    setDaysList([...Array(30).keys()].map(i => i + newStart));
   };
 
-  const nextDays = () => {
-    setStartDay(prevStart => prevStart + 30);
-    setDaysList([...Array(30).keys()].map(i => i + startDay));
-  };
-
-  const prevDays = () => {
-    setStartDay(prevStart => Math.max(prevStart - 30, 0)); 
-    setDaysList([...Array(30).keys()].map(i => i + startDay));
-  };
-
-  const cancelChoosingDate = () => {
-    setShowDatePicker(false);
-  };
-
-  const saveDate = (output) => {
-    setShowDatePicker(false);
-    setNewEventDate(output.dateString);
-  };
-
-  const saveEventTime = (date, selectedTime) => {
-    setShowTimePicker(false);
-    if (selectedTime) {
-      const formattedTime = selectedTime.toLocaleTimeString([], {
-        hour: '2-digit', 
-        minute: '2-digit'
-      });
-      setNewEventTime(formattedTime);
-    }
-    setShowTimePicker(false);
-  };
-
+  // Toggle tutorial mode and reset highlights
   const toggleTutorialMode = () => {
-    setTutorialMode(prevMode => !prevMode);
+    setTutorialMode(prev => !prev);
     setClickedElements({});
     setButtonExplanation(null);
   };
 
-  const handleTutorialButtonClick = (elementId) => {
+  // Handle interaction with tutorial-highlighted UI
+  const handleTutorialClick = (id) => {
     if (!tutorialMode) return;
-
-    // Set the current clicked-on button in tutorial mode so that we can show
-    // the text that is associated with it
-    // Can click and unclick a button this way
-    setClickedElements(prev => {
-      if (prev[elementId]) {
-        return {};
-      }
-      return { [elementId]: true };
-    });
-
-    setButtonExplanation(prev => prev === elementId ? null : elementId);
+    setClickedElements(prev => (prev[id] ? {} : { [id]: true }));
+    setButtonExplanation(prev => (prev === id ? null : id));
   };
 
-  const getTutorialStyle = (elementId) => {
-    if (!tutorialMode) return {};
-    
-    // The elements in tutorial mode that we can click on will have a red border. When you cick on it,
-    // it will change to a ligher orange color
-    return {
+  // Conditionally apply tutorial highlighting
+  const getTutorialStyle = (id) =>
+    tutorialMode ? {
       borderWidth: 4,
-      borderColor: clickedElements[elementId] ? '#FFC067' : '#FF0000', 
+      borderColor: clickedElements[id] ? '#FFC067' : '#FF0000',
       borderStyle: 'solid',
-    };
-  };
+    } : {};
+
+  // Generate calendar view list
+  const CalendarList = (
+    <FlatList
+      data={daysList}
+      renderItem={({ item }) => <Calendar currentDate={new Date()} dayOffset={item} />}
+      keyExtractor={(item) => item.toString()}
+      scrollEnabled={!tutorialMode}
+      showsVerticalScrollIndicator={!tutorialMode}
+    />
+  );
 
   return (
     <EventsProvider>
       <View style={styles.container}>
+        {/* Header with buttons */}
         <View style={styles.header}>
-          <Text style={styles.text}>Schedule</Text>
-          <TouchableOpacity 
-            onPress={tutorialMode ? () => handleTutorialButtonClick('addEvent') : handleAddingEvent}
-            style={[styles.addEventButton, getTutorialStyle('addEvent')]}
-          >
-          <Text style={styles.buttonText}>+</Text>
-          </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={toggleTutorialMode} 
+          <TouchableOpacity
+            onPress={toggleTutorialMode}
             style={[styles.helpButton, getTutorialStyle('helpButton')]}
           >
             <Text style={styles.helpButtonText}>?</Text>
           </TouchableOpacity>
+
+          <Text style={styles.text}>Schedule</Text>
+
         </View>
 
-        <TutorialModeUI 
-          text={tutorialMode 
-            ? tutorialStatements[buttonExplanation] || tutorialStatements.helpButton 
-            : null
-          }
+        {/* Tutorial text overlay */}
+        <TutorialModeUI
+          text={tutorialMode ? tutorialStatements[buttonExplanation] || tutorialStatements.helpButton : null}
         />
 
+        {/* Navigation controls */}
         <View style={styles.navigation}>
-          <TouchableOpacity 
-            onPress={tutorialMode ? () => handleTutorialButtonClick('prevButton') : prevDays}
+          <TouchableOpacity
+            onPress={tutorialMode ? () => handleTutorialClick('prevButton') : () => updateDays(-1)}
             style={[styles.navButton, getTutorialStyle('prevButton')]}
           >
             <Text style={styles.navButtonText}>Prev</Text>
           </TouchableOpacity>
-          <TouchableOpacity 
-            onPress={tutorialMode ? () => handleTutorialButtonClick('nextButton') : nextDays}
+          <TouchableOpacity
+            onPress={tutorialMode ? () => handleTutorialClick('nextButton') : () => updateDays(1)}
             style={[styles.navButton, getTutorialStyle('nextButton')]}
           >
             <Text style={styles.navButtonText}>Next</Text>
           </TouchableOpacity>
         </View>
 
+        {/* Calendar list container */}
         {tutorialMode ? (
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.calendarContainer, getTutorialStyle('calendar')]}
-            onPress={() => handleTutorialButtonClick('calendar')}
+            onPress={() => handleTutorialClick('calendar')}
             activeOpacity={0.7}
           >
-            <FlatList
-              data={daysList}
-              renderItem={({ item }) => (
-                <Calendar currentDate={currentDate} dayOffset={item} />
-              )}
-              keyExtractor={(item) => item.toString()}
-              scrollEnabled={false}
-            />
+            {CalendarList}
+            <View style={styles.plusButton}>
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addEvent') : () => setAddModalVisible(true)}/>
+            </View>
           </TouchableOpacity>
         ) : (
           <View style={styles.calendarContainer}>
-            <FlatList
-              data={daysList}
-              renderItem={({ item }) => (
-                <Calendar currentDate={currentDate} dayOffset={item} />
-              )}
-              keyExtractor={(item) => item.toString()}
-              showsVerticalScrollIndicator={true}
-              scrollEnabled={true}
-            />
+            {CalendarList}
+            <View style={styles.plusButton}>
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addEvent') : () => setAddModalVisible(true)}/>
+            </View>
           </View>
+          
         )}
       </View>
 
-      {/* Modal */}
-      {/* Used the same code for modal that Chase wrote in app/Caregivers */}
+      {/* Modal for adding a new calendar event */}
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent
         visible={addModalVisible}
-        onRequestClose={handleCancel}
+        onRequestClose={() => setAddModalVisible(false)}
       >
         <View style={styles.modalWrapper}>
-          {/* Background Blur Effect */}
-          {Platform.OS === 'web' ? (
-            <View style={styles.modalBackgroundFallback} />
-          ) : (
-            <BlurView intensity={100} style={styles.modalBackground} />
-          )}
+          {/* Background blur based on platform */}
+          {Platform.OS === 'web'
+            ? <View style={styles.modalBackgroundFallback} />
+            : <BlurView intensity={100} style={styles.modalBackground} />
+          }
 
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Add New Event</Text>
@@ -251,60 +191,69 @@ const CalendarScreen = ({ }) => {
               style={styles.input}
               placeholder="Event Name"
               placeholderTextColor="#888"
-              value={newEventName}
-              onChangeText={setNewEventName}
+              value={event.name}
+              onChangeText={(text) => updateEvent('name', text)}
             />
-            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{width: '100%'}}>
+
+            <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ width: '100%' }}>
               <TextInput
                 style={styles.input}
                 placeholder="Event Date"
                 placeholderTextColor="#888"
-                value={newEventDate}
+                value={event.date}
                 editable={false}
               />
             </TouchableOpacity>
-            {/* Learned more about the neat date picker: https://github.com/roto93/react-native-neat-date-picker */}
-            {/* Believe the look of this is cleaner and easier to look at for those who are older than the date picker
-                from the React Native library */}
+
             <NeatDatePicker
               isVisible={showDatePicker}
-              onCancel={cancelChoosingDate}
-              onConfirm={saveDate}
-              mode={'single'} 
+              onCancel={() => setShowDatePicker(false)}
+              onConfirm={(out) => updateEvent('date', out.dateString)}
+              mode={'single'}
             />
-            <TouchableOpacity onPress={() => setShowTimePicker(true)} style={{width: '100%'}}>
+
+            <TouchableOpacity onPress={() => setShowTimePicker(true)} style={{ width: '100%' }}>
               <TextInput
                 style={styles.input}
                 placeholder="Time of Event"
                 placeholderTextColor="#888"
-                value={newEventTime}
+                value={event.time}
                 editable={false}
               />
-            {/*Learned about date/time picker: https://github.com/react-native-datetimepicker/datetimepicker */}
             </TouchableOpacity>
+
             {showTimePicker && (
               <DateTimePicker
-                testID="timePicker"
-                value = {new Date()}
+                value={new Date()}
                 mode="time"
-                is24Hour={false} // It shows just the 12 hour and then AM/PM (may be easier for the elderly to choose)
+                is24Hour={false}
                 display="default"
-                onChange={saveEventTime}
+                onChange={(_, selectedTime) => {
+                  if (selectedTime) {
+                    const timeStr = selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    updateEvent('time', timeStr);
+                  }
+                  setShowTimePicker(false);
+                }}
               />
             )}
+
             <TextInput
               style={styles.input}
               placeholder="Description (optional)"
               placeholderTextColor="#888"
-              value={newEventDesc}
-              onChangeText={setNewEventDesc}
+              value={event.desc}
+              onChangeText={(text) => updateEvent('desc', text)}
             />
 
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.modalButton} onPress={handleSaveEvent}>
                 <Text style={styles.modalButtonText}>✔ Save</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={handleCancel}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setAddModalVisible(false)}
+              >
                 <Text style={styles.modalButtonText}>✖ Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -322,27 +271,20 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   text: {
-    fontSize: 32,
+    fontSize: 36,
     fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 20,
+    marginBottom: 30,
+    color: '#000',
+    position: 'absolute',
+    left: '27%',
+    margin: 0,
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    position: 'relative',
     alignItems: 'center',
-    marginBottom: 20,
     width: '100%',
-  },
-  addEventButton: {
-    padding: 10,
-    backgroundColor:'#ADD8E6',
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: 50,
-    height: 50,
-    marginLeft: 10,
+    justifyContent: 'space-between',
   },
   helpButton: {
     width: 60,
@@ -469,7 +411,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 5,
     overflow: 'hidden', 
+  },
+  plusButton: {
+    position: 'absolute',
+    bottom: 20,
+    right: 20,
   }
 });
-
-export default CalendarScreen;

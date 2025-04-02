@@ -8,7 +8,6 @@ export default function HelpButton({ input }: { input: string }) {
                 style={styles.helpButton}
                 onPress={() => {
                     Alert.alert("Page Info", input)
-                    // window.alert(input)
                 }}
             >
                 <Text style={styles.helpButtonText}>?</Text>
@@ -23,13 +22,13 @@ const styles = StyleSheet.create({
     helpButton: {
         width: 60,
         height: 60,
-        backgroundColor: 'transparent',
+        backgroundColor: '#6F91FF',
         borderRadius: 30,
         justifyContent: 'center',
         alignItems: 'center',
     },
     helpButtonText: {
-        color: '#D1001F',
+        color: '#FFF',
         fontSize: 48,
         fontWeight: 'bold',
     }

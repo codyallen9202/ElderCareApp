@@ -13,93 +13,80 @@ import {
 } from 'react-native';
 import { sendSMSBlast } from '@/components/smsBlast';
 import { saveInfo, getUserId, deleteCaretaker } from '@/functions/gen-user';
-import {collection, getDocs} from "firebase/firestore";
-import { db } from "../../firebaseconfig";
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../../firebaseconfig';
 import TutorialModeUI from '@/components/TutorialModeUI';
 
 export default function CaregiversList() {
-    //  **Restore default caregivers list**
-  /*
-  const [caregivers, setCaregivers] = useState([
-    { id: '1', name: 'Cody Allen', phone: '865-712-2138' },
-    // { id: '2', name: 'Caregiver Two', phone: '987-654-3210' },
-  ]); */
-  const [caregivers, setCaregivers] = useState<{ id: string; name: string; phone: string }[]>([]);
-  const [userID, setUserID] = useState<string | null>(null);
+  const [caregivers, setCaregivers] = useState([]);
+  const [userID, setUserID] = useState(null);
   const [tutorialMode, setTutorialMode] = useState(false);
   const [clickedElements, setClickedElements] = useState({});
   const [buttonExplanation, setButtonExplanation] = useState(null);
-
-  const tutorialStatements = {
-    caregiverList: "View your trusted caregivers here.",
-    addCaregiver: "Tap here to add a new caregiver to your list.",
-    alertAll: "Tap this button to send an alert to all caregivers.",
-    helpButton: "Click this button to turn on tutorial mode and also to turn it off",
-  };
-
-  useEffect(() => {
-    async function fetchCaregivers() {
-      const id = await getUserId();
-      setUserID(id);
-
-      if (id) {
-        const caretakersRef = collection(db, "Users", id, "Caretakers");
-        const snapshot = await getDocs(caretakersRef);
-        const caregiversList = snapshot.docs.map(doc => {
-          const data = doc.data();
-          return {
-            id: doc.id,
-            name: data.name || "Unknown", // Provide a default name
-            phone: data.phone || "N/A" // Provide a default phone number
-          };
-        });
-
-        setCaregivers(caregiversList);
-      }
-    }
-    fetchCaregivers();
-  }, []);
-  
-  //  **Ensure "Add Caregiver" modal opens & closes properly**
   const [addModalVisible, setAddModalVisible] = useState(false);
   const [newCaregiverName, setNewCaregiverName] = useState('');
   const [newCaregiverPhone, setNewCaregiverPhone] = useState('');
 
-
-  const handleAddCaregiver = () => {
-    if (!tutorialMode) 
-      setAddModalVisible(true);
+  const tutorialStatements = {
+    caregiverList: 'View your trusted caregivers here.',
+    addCaregiver: 'Tap here to add a new caregiver to your list.',
+    alertAll: 'Tap this button to send an alert to all caregivers.',
+    helpButton: 'Click this button to turn on tutorial mode and also to turn it off',
   };
 
-    //  **Save new caregiver & update list**
+  useEffect(() => {
+    (async () => {
+      const id = await getUserId();
+      setUserID(id);
+      if (id) {
+        const snapshot = await getDocs(collection(db, 'Users', id, 'Caretakers'));
+        const caregiversList = snapshot.docs.map(doc => ({
+          id: doc.id,
+          name: doc.data().name || 'Unknown',
+          phone: doc.data().phone || 'N/A',
+        }));
+        setCaregivers(caregiversList);
+      }
+    })();
+  }, []);
+
+  const handleAddCaregiver = () => !tutorialMode && setAddModalVisible(true);
+
   const handleSaveCaregiver = () => {
-    if (newCaregiverName.trim() && newCaregiverPhone.trim()) {
-      const newCaregiver = {
-        id: Date.now().toString(), //  Unique ID
-        name: newCaregiverName,
-        phone: newCaregiverPhone,
-      };
-      setCaregivers(prevCaregivers => [...prevCaregivers, newCaregiver]); //  Ensure state updates correctly
-      setNewCaregiverName('');
-      setNewCaregiverPhone('');
-      setAddModalVisible(false); //  Close modal after saving
-      saveInfo(newCaregiver, userID!, "Caretakers")
-    } else {
-      alert("Please enter both name and phone number.");
-    }
+    if (!newCaregiverName.trim() || !newCaregiverPhone.trim()) return alert('Please enter both name and phone number.');
+    const newCaregiver = {
+      id: Date.now().toString(),
+      name: newCaregiverName,
+      phone: newCaregiverPhone,
+    };
+    setCaregivers(prev => [...prev, newCaregiver]);
+    saveInfo(newCaregiver, userID, 'Caretakers');
+    setNewCaregiverName('');
+    setNewCaregiverPhone('');
+    setAddModalVisible(false);
   };
 
-  const handleDeleteCaregiver = (caregiverId: string) => {
-    setCaregivers(prevCaregivers =>
-      prevCaregivers.filter(item => item.id !== caregiverId)
-    );
-    deleteCaretaker(caregiverId, userID!);
+  const handleDeleteCaregiver = id => {
+    setCaregivers(prev => prev.filter(c => c.id !== id));
+    deleteCaretaker(id, userID);
   };
 
-    // **SMS Alert to all caregivers**
+  const handleTutorialClick = id => {
+    if (!tutorialMode) return;
+    setClickedElements(prev => (prev[id] ? {} : { [id]: true }));
+    setButtonExplanation(prev => (prev === id ? null : id));
+  };
 
+  const getTutorialStyle = id =>
+    tutorialMode
+      ? {
+          borderWidth: 4,
+          borderColor: clickedElements[id] ? '#FFC067' : '#FF0000',
+          borderStyle: 'solid',
+        }
+      : {};
 
-  const renderCaregiver = ({ item }: any) => (
+  const renderCaregiver = ({ item }) => (
     <View style={styles.caregiver}>
       <View style={styles.caregiverInfo}>
         <Text style={styles.caregiverName}>{item.name}</Text>
@@ -111,93 +98,68 @@ export default function CaregiversList() {
     </View>
   );
 
-  // Both below are same as the functions in Schedule.tsx
-  const handleTutorialClick = (id) => {
-    if (!tutorialMode) return;
-    setClickedElements(prev => (prev[id] ? {} : { [id]: true }));
-    setButtonExplanation(prev => (prev === id ? null : id));
-  };
-
-  const getTutorialStyle = (id) => {
-    if (!tutorialMode) return {};
-    return {
-      borderWidth: 4,
-      borderColor: clickedElements[id] ? '#FFC067' : '#FF0000',
-      borderStyle: 'solid',
-    };
-  };
+  const caregiverList = (
+    <FlatList
+      data={caregivers}
+      renderItem={renderCaregiver}
+      keyExtractor={item => item.id}
+      contentContainerStyle={styles.list}
+      ListEmptyComponent={<Text style={styles.emptyText}>No caregivers added yet.</Text>}
+      scrollEnabled={!tutorialMode}
+      showsVerticalScrollIndicator={!tutorialMode}
+    />
+  );
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity
-        onPress={() => setTutorialMode(prev => !prev)}
-        style={[styles.helpButton, getTutorialStyle('helpButton')]}
-        onPressIn={() => tutorialMode && handleTutorialClick('helpButton')}
-      > 
-        <Text style={styles.helpButtonText}>?</Text>
-      </TouchableOpacity>
-      <View style={styles.header}> 
-        <Text style={styles.title}>Caregivers List</Text>
+
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() => setTutorialMode(prev => !prev)}
+          style={[styles.helpButton, getTutorialStyle('helpButton')]}
+          onPressIn={() => handleTutorialClick('helpButton')}
+        >
+          <Text style={styles.helpButtonText}>?</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.title}>Contacts</Text>
       </View>
 
-      {/* Code for tutorial mode below (similar to schedule page) */}
       <TutorialModeUI
-        text={tutorialMode
-          ? tutorialStatements[buttonExplanation] || tutorialStatements.helpButton
-          : null
-        }
+        text={tutorialMode ? tutorialStatements[buttonExplanation] || tutorialStatements.helpButton : null}
       />
 
       {tutorialMode ? (
-        <TouchableOpacity 
+        <TouchableOpacity
           activeOpacity={1}
           onPress={() => handleTutorialClick('caregiverList')}
           style={[styles.tutorialListContainer, getTutorialStyle('caregiverList')]}
         >
-          <FlatList
-            data={caregivers}
-            renderItem={renderCaregiver}
-            keyExtractor={(item) => item.id}
-            contentContainerStyle={styles.list}
-            ListEmptyComponent={<Text style={styles.emptyText}>No caregivers added yet.</Text>}
-            scrollEnabled={false}
-          />
+          {caregiverList}
         </TouchableOpacity>
-      ) : (
-        <FlatList
-          data={caregivers}
-          renderItem={renderCaregiver}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          ListEmptyComponent={<Text style={styles.emptyText}>No caregivers added yet.</Text>}
-          showsVerticalScrollIndicator={true}
-        />
-      )}
+      ) : caregiverList}
 
-      {/*  **Button to open "Add Caregiver" modal** */}
       <TouchableOpacity
         style={[styles.addButton, getTutorialStyle('addCaregiver')]}
-        onPress={() => tutorialMode ? handleTutorialClick('addCaregiver') : handleAddCaregiver()}
+        onPress={() => (tutorialMode ? handleTutorialClick('addCaregiver') : handleAddCaregiver())}
       >
         <Text style={styles.addButtonText}>Add Caregiver</Text>
       </TouchableOpacity>
 
-      {/*  **Alert All Button** */}
       <TouchableOpacity
         style={[styles.alertButton, getTutorialStyle('alertAll')]}
-        onPress={() => tutorialMode ? handleTutorialClick('alertAll') : sendSMSBlast([...caregivers])}
+        onPress={() => (tutorialMode ? handleTutorialClick('alertAll') : sendSMSBlast([...caregivers]))}
       >
         <Text style={styles.alertButtonText}>Alert All</Text>
       </TouchableOpacity>
 
       <Modal
         animationType="slide"
-        transparent={true}
+        transparent
         visible={addModalVisible}
         onRequestClose={() => setAddModalVisible(false)}
       >
         <View style={styles.modalWrapper}>
-          {/* Background Blur Effect */}
           {Platform.OS === 'web' ? (
             <View style={styles.modalBackgroundFallback} />
           ) : (
@@ -206,7 +168,6 @@ export default function CaregiversList() {
 
           <View style={styles.modalContent}>
             <Text style={styles.modalTitle}>Add New Caregiver</Text>
-
             <TextInput
               style={styles.input}
               placeholder="Name"
@@ -222,12 +183,14 @@ export default function CaregiversList() {
               onChangeText={setNewCaregiverPhone}
               keyboardType="phone-pad"
             />
-
             <View style={styles.modalButtons}>
               <TouchableOpacity style={styles.modalButton} onPress={handleSaveCaregiver}>
                 <Text style={styles.modalButtonText}>✔ Save</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setAddModalVisible(false)}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setAddModalVisible(false)}
+              >
                 <Text style={styles.modalButtonText}>✖ Cancel</Text>
               </TouchableOpacity>
             </View>
@@ -242,15 +205,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    paddingTop: 20,
-    paddingHorizontal: 30,
     backgroundColor: '#F9F9F9',
+  },
+  header: {
+    flexDirection: 'row',
+    position: 'relative',
+    alignItems: 'center',
+    width: '100%',
+    justifyContent: 'space-between',
   },
   title: {
     fontSize: 36,
     fontWeight: 'bold',
     marginBottom: 30,
     color: '#000',
+    position: 'absolute',
+    left: '50%',
+    margin: 0,
+    transform: [{ translateX: -0.5 * 130 }]
   },
   list: {
     width: '100%',
@@ -271,13 +243,14 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
+    zIndex: 1,
   },
   helpButtonText: {
     color: '#D1001F',
     fontSize: 48,
     fontWeight: 'bold',
   },
-
   //  Caregiver Item Card Styling
   caregiver: {
     flexDirection: 'row',
@@ -319,7 +292,7 @@ const styles = StyleSheet.create({
 
   // Add & Alert Buttons
   addButton: {
-    backgroundColor: '#4CAF50',
+    backgroundColor: '#6F91FF',
     paddingVertical: 18,
     paddingHorizontal: 60,
     borderRadius: 8,

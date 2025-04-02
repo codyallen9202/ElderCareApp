@@ -55,7 +55,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="user-friends" color={color} />,
         }}
       />
-
+      
     </Tabs>
   );
 }

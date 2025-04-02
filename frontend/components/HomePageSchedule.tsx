@@ -17,9 +17,6 @@ const Calendar = ({ currentDate, dayOffset }) => {
 
     return (
         <View style={[styles.dayContainer, isToday(date) && styles.highlight]}>
-            {/* MMMM gives us the month name instead of a number */}
-            <Text style={styles.dateText}>{format(date, 'MMMM dd, yyyy')}</Text>
-
             {eventsForDay.length > 0 ? (
                 eventsForDay.map((event, index) => (
                     <View key={index} style={styles.eventContainer}>
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
     highlight: {
         backgroundColor: '##FDFD96',
         borderRadius: 5,
-        borderWidth: 2,
+        // borderWidth: 2,
     }
 });
 

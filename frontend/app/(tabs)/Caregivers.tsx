@@ -16,6 +16,7 @@ import { saveInfo, getUserId, deleteCaretaker } from '@/functions/gen-user';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseconfig';
 import TutorialModeUI from '@/components/TutorialModeUI';
+import HeaderDisplay from '@/components/HeaderDisplay';
 
 export default function CaregiversList() {
   const [caregivers, setCaregivers] = useState([]);
@@ -80,10 +81,10 @@ export default function CaregiversList() {
   const getTutorialStyle = id =>
     tutorialMode
       ? {
-          borderWidth: 4,
-          borderColor: clickedElements[id] ? '#FFC067' : '#FF0000',
-          borderStyle: 'solid',
-        }
+        borderWidth: 4,
+        borderColor: clickedElements[id] ? '#FFC067' : '#FF0000',
+        borderStyle: 'solid',
+      }
       : {};
 
   const renderCaregiver = ({ item }) => (
@@ -122,7 +123,7 @@ export default function CaregiversList() {
           <Text style={styles.helpButtonText}>?</Text>
         </TouchableOpacity>
 
-        <Text style={styles.title}>Contacts</Text>
+        <HeaderDisplay pageTitle={'Contacts'} />
       </View>
 
       <TutorialModeUI
@@ -209,20 +210,25 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    position: 'relative',
     alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    position: 'relative',
   },
-  title: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#000',
+  helpButton: {
     position: 'absolute',
-    left: '50%',
-    margin: 0,
-    transform: [{ translateX: -0.5 * 130 }]
+    left: 0,
+    width: 60,
+    height: 60,
+    backgroundColor: '#6F91FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  helpButtonText: {
+    color: '#FFF',
+    fontSize: 48,
+    fontWeight: 'bold',
   },
   list: {
     width: '100%',
@@ -235,21 +241,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: 'gray',
     marginTop: 20,
-  },
-  helpButton: {
-    width: 60,
-    height: 60,
-    backgroundColor: 'transparent',
-    borderRadius: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-    zIndex: 1,
-  },
-  helpButtonText: {
-    color: '#D1001F',
-    fontSize: 48,
-    fontWeight: 'bold',
   },
   //  Caregiver Item Card Styling
   caregiver: {

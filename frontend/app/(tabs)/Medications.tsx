@@ -6,7 +6,7 @@ import {
 import { BlurView } from 'expo-blur';
 import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
-import DateDisplay from '@/components/DateDisplay';
+import HeaderDisplay from '@/components/HeaderDisplay';
 import { saveInfo, getUserId } from '@/functions/gen-user';
 import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
@@ -23,7 +23,7 @@ export default function MedicationsPage() {
   const [tutorialMode, setTutorialMode] = useState(false);
   const [clickedElements, setClickedElements] = useState({});
   const [buttonExplanation, setButtonExplanation] = useState(null);
-  
+
   // Statements for tutorial guidance
   const tutorialStatements = {
     addMed: 'Add a new medication to your list',
@@ -37,14 +37,14 @@ export default function MedicationsPage() {
     setClickedElements({});
     setButtonExplanation(null);
   };
-  
+
   // Handle interaction with tutorial-highlighted UI
   const handleTutorialClick = (id) => {
     if (!tutorialMode) return;
     setClickedElements(prev => (prev[id] ? {} : { [id]: true }));
     setButtonExplanation(prev => (prev === id ? null : id));
   };
-  
+
   // Conditionally apply tutorial highlighting
   const getTutorialStyle = (id) =>
     tutorialMode ? {
@@ -86,15 +86,15 @@ export default function MedicationsPage() {
   return (
     <MedicationsProvider>
       <View style={styles.container}>
-        {/* Header section with date, help, and add buttons */}
+        {/* Header section with date and help */}
         <View style={styles.header}>
-          <DateDisplay />
+          <HeaderDisplay pageTitle={'Medications'} />
           <View style={styles.helpButton}>
             <TouchableOpacity
               onPress={toggleTutorialMode}
               style={[styles.helpButton, getTutorialStyle('helpButton')]}
             >
-            <Text style={styles.helpButtonText}>?</Text>
+              <Text style={styles.helpButtonText}>?</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -105,26 +105,26 @@ export default function MedicationsPage() {
         />
 
         {/* Medication list display */}
-                {tutorialMode ? (
-                  <TouchableOpacity
-                    style={[styles.medListContainer, getTutorialStyle('list')]}
-                    onPress={() => handleTutorialClick('list')}
-                    activeOpacity={0.7}
-                  > 
-                    <MedList/>
-                    <View style={styles.addButton}>
-                      <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)}/>
-                    </View>
-                  </TouchableOpacity>
-                ) : (
-                  <View style={styles.medListContainer}>
-                    <MedList/>
-                    <View style={styles.addButton}>
-                      <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)}/>
-                    </View>
-                  </View>
-                  
-                )}
+        {tutorialMode ? (
+          <TouchableOpacity
+            style={[styles.medListContainer, getTutorialStyle('list')]}
+            onPress={() => handleTutorialClick('list')}
+            activeOpacity={0.7}
+          >
+            <MedList />
+            <View style={styles.addButton}>
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)} />
+            </View>
+          </TouchableOpacity>
+        ) : (
+          <View style={styles.medListContainer}>
+            <MedList />
+            <View style={styles.addButton}>
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)} />
+            </View>
+          </View>
+
+        )}
 
         {/* Add medication modal */}
         <Modal

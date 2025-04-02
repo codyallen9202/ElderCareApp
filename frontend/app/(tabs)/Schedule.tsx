@@ -14,6 +14,7 @@ import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import PlusButton from '@/components/PlusButton';
+import HeaderDisplay from '@/components/HeaderDisplay';
 
 export default function Schedule() {
   // Event modal and form state
@@ -122,7 +123,7 @@ export default function Schedule() {
             <Text style={styles.helpButtonText}>?</Text>
           </TouchableOpacity>
 
-          <Text style={styles.text}>Schedule</Text>
+          <HeaderDisplay pageTitle={'Schedule'} />
 
         </View>
 
@@ -156,17 +157,17 @@ export default function Schedule() {
           >
             {CalendarList}
             <View style={styles.plusButton}>
-              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addEvent') : () => setAddModalVisible(true)}/>
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addEvent') : () => setAddModalVisible(true)} />
             </View>
           </TouchableOpacity>
         ) : (
           <View style={styles.calendarContainer}>
             {CalendarList}
             <View style={styles.plusButton}>
-              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addEvent') : () => setAddModalVisible(true)}/>
+              <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addEvent') : () => setAddModalVisible(true)} />
             </View>
           </View>
-          
+
         )}
       </View>
 
@@ -267,35 +268,27 @@ export default function Schedule() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
     backgroundColor: '#fff',
-  },
-  text: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#000',
-    position: 'absolute',
-    left: '27%',
-    margin: 0,
   },
   header: {
     flexDirection: 'row',
-    position: 'relative',
     alignItems: 'center',
-    width: '100%',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    position: 'relative',
   },
   helpButton: {
+    position: 'absolute',
+    left: 0,
     width: 60,
     height: 60,
-    backgroundColor: 'transparent',
-    borderRadius: 30,
+    backgroundColor: '#6F91FF',
     justifyContent: 'center',
     alignItems: 'center',
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
   },
   helpButtonText: {
-    color: '#D1001F',
+    color: '#FFF',
     fontSize: 48,
     fontWeight: 'bold',
   },
@@ -317,7 +310,7 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
     backgroundColor: 'rgba(0,0,0,0.4)',
-    backdropFilter: 'blur(10px)', 
+    backdropFilter: 'blur(10px)',
   },
   modalBackground: {
     position: 'absolute',
@@ -377,15 +370,16 @@ const styles = StyleSheet.create({
   navigation: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    width: '100%', 
+    width: '100%',
     marginTop: 10,
     marginBottom: 10,
+    padding: 10,
   },
   navButton: {
     flex: 1,
     backgroundColor: '#4CAF50',
     paddingVertical: 10,
-    paddingHorizontal: 15, 
+    paddingHorizontal: 15,
     borderRadius: 10,
     alignItems: 'center',
     marginHorizontal: 5,
@@ -409,8 +403,9 @@ const styles = StyleSheet.create({
   calendarContainer: {
     flex: 1,
     borderRadius: 10,
-    padding: 5,
-    overflow: 'hidden', 
+    padding: 15,
+    paddingTop: 0,
+    overflow: 'hidden',
   },
   plusButton: {
     position: 'absolute',

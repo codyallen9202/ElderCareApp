@@ -24,7 +24,7 @@ export default function Schedule() {
   // User and calendar state
   const [userID, setUserID] = useState(null);
   const [startDay, setStartDay] = useState(0);
-  const [daysList, setDaysList] = useState([...Array(30).keys()]);
+  const [daysList, setDaysList] = useState([...Array(10).keys()]);
 
   // Date/time picker visibility
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -38,8 +38,8 @@ export default function Schedule() {
   // Statements for tutorial guidance
   const tutorialStatements = {
     addEvent: 'Add a new event to your calendar',
-    prevButton: 'View the previous 30 days',
-    nextButton: 'View the next 30 days',
+    prevButton: 'View the previous 10 days',
+    nextButton: 'View the next 10 days',
     calendar: 'View the events you have inputted to your calendar',
     helpButton: 'Click this button to turn on tutorial mode and also to turn it off',
   };
@@ -73,9 +73,9 @@ export default function Schedule() {
 
   // Shift visible days range
   const updateDays = (dir) => {
-    const newStart = Math.max(startDay + (dir * 30), 0);
+    const newStart = Math.max(startDay + (dir * 10), 0);
     setStartDay(newStart);
-    setDaysList([...Array(30).keys()].map(i => i + newStart));
+    setDaysList([...Array(10).keys()].map(i => i + newStart));
   };
 
   // Toggle tutorial mode and reset highlights

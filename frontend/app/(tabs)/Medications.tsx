@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity, Modal, TextInput, Platform } from 'react-native';
+import {
+  StyleSheet, View, Text, TouchableOpacity,
+  Modal, TextInput, Platform
+} from 'react-native';
 import { BlurView } from 'expo-blur';
 import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
@@ -7,81 +10,140 @@ import DateDisplay from '@/components/DateDisplay';
 import { saveInfo, getUserId } from '@/functions/gen-user';
 import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
+import TutorialModeUI from '@/components/TutorialModeUI';
 
 export default function MedicationsPage() {
-  // Modal state and input fields for new medication
+  // Modal visibility and form inputs
   const [modalVisible, setModalVisible] = useState(false);
   const [newMedName, setNewMedName] = useState('');
   const [newMedTime, setNewMedTime] = useState('');
-  const [userID, setUserID] = useState<string | null>(null);
+  const [userID, setUserID] = useState(null);
 
-  useEffect(() => {
-    async function loadUserId() {
-      const id = await getUserId();
-      setUserID(id);
-    }
-    loadUserId();
-  }, []);
-
-  // Open the modal when the plus button is pressed
-  const handleAddMedication = () => {
-    setModalVisible(true);
+  // Tutorial mode state
+  const [tutorialMode, setTutorialMode] = useState(false);
+  const [clickedElements, setClickedElements] = useState({});
+  const [buttonExplanation, setButtonExplanation] = useState(null);
+  
+  // Statements for tutorial guidance
+  const tutorialStatements = {
+    addMed: 'Add a new medication to your list',
+    list: 'View the medications you have to take',
+    helpButton: 'Click this button to turn on tutorial mode and also to turn it off',
   };
 
-  // Save the medication and close the modal
-  const handleSaveMedication = () => {
-    if (newMedName.trim() && newMedTime.trim()) {
-      const medInfo = {
-        id: Date.now().toString(),
-        name: newMedName,
-        time: newMedTime,
-        // You may also want to store pillColor and days here if applicable
-      };
-      console.log("Saving new medication:", { name: newMedName, time: newMedTime });
-      // Update the medications list in Firestore (assumes your saveInfo function handles this)
-      saveInfo(medInfo, userID!, "Medications");
+  // Toggle tutorial mode and reset highlights
+  const toggleTutorialMode = () => {
+    setTutorialMode(prev => !prev);
+    setClickedElements({});
+    setButtonExplanation(null);
+  };
+  
+  // Handle interaction with tutorial-highlighted UI
+  const handleTutorialClick = (id) => {
+    if (!tutorialMode) return;
+    setClickedElements(prev => (prev[id] ? {} : { [id]: true }));
+    setButtonExplanation(prev => (prev === id ? null : id));
+  };
+  
+  // Conditionally apply tutorial highlighting
+  const getTutorialStyle = (id) =>
+    tutorialMode ? {
+      borderWidth: 4,
+      borderColor: clickedElements[id] ? '#FFC067' : '#FF0000',
+      borderStyle: 'solid',
+    } : {};
 
-      // Reset inputs and close modal
-      setNewMedName('');
-      setNewMedTime('');
-      setModalVisible(false);
-    } else {
+  // Fetch user ID on mount
+  useEffect(() => {
+    getUserId().then(setUserID);
+  }, []);
+
+  // Handle '+' button press to open modal
+  const handleAddMedication = () => setModalVisible(true);
+
+  // Validate and save new medication entry
+  const handleSaveMedication = () => {
+    if (!newMedName.trim() || !newMedTime.trim()) {
       alert("Please enter both medication name and time.");
+      return;
     }
+
+    const medInfo = {
+      id: Date.now().toString(),
+      name: newMedName,
+      time: newMedTime,
+    };
+
+    console.log("Saving new medication:", medInfo);
+    saveInfo(medInfo, userID, "Medications");
+
+    // Reset inputs and close modal
+    setNewMedName('');
+    setNewMedTime('');
+    setModalVisible(false);
   };
 
   return (
-    // Wrap the content with MedicationsProvider so that MedList can access the context
     <MedicationsProvider>
       <View style={styles.container}>
+        {/* Header section with date, help, and add buttons */}
         <View style={styles.header}>
           <DateDisplay />
           <View style={styles.helpButton}>
-            <HelpButton input="This page lists all of the medications you need to take today. When you've taken a medication, tap it, and it will turn gray." />
+            <TouchableOpacity
+              onPress={toggleTutorialMode}
+              style={[styles.helpButton, getTutorialStyle('helpButton')]}
+            >
+            <Text style={styles.helpButtonText}>?</Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.addButton}>
-            <PlusButton onPress={handleAddMedication} />
-          </View>
-        </View>
-        <View style={styles.medListContainer}>
-          <MedList />
         </View>
 
-        {/* Modal for adding a new medication */}
+        {/* Tutorial text overlay */}
+        <TutorialModeUI
+          text={tutorialMode ? tutorialStatements[buttonExplanation] || tutorialStatements.helpButton : null}
+        />
+
+        {/* Medication list display */}
+                {tutorialMode ? (
+                  <TouchableOpacity
+                    style={[styles.medListContainer, getTutorialStyle('list')]}
+                    onPress={() => handleTutorialClick('list')}
+                    activeOpacity={0.7}
+                  > 
+                    <MedList/>
+                    <View style={styles.addButton}>
+                      <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)}/>
+                    </View>
+                  </TouchableOpacity>
+                ) : (
+                  <View style={styles.medListContainer}>
+                    <MedList/>
+                    <View style={styles.addButton}>
+                      <PlusButton onPress={tutorialMode ? () => handleTutorialClick('addMed') : () => setAddModalVisible(true)}/>
+                    </View>
+                  </View>
+                  
+                )}
+
+        {/* Add medication modal */}
         <Modal
           animationType="slide"
-          transparent={true}
+          transparent
           visible={modalVisible}
           onRequestClose={() => setModalVisible(false)}
         >
           <View style={styles.modalWrapper}>
-            {Platform.OS === 'web' ? (
-              <View style={styles.modalBackgroundFallback} />
-            ) : (
-              <BlurView intensity={50} style={styles.modalBackground} />
-            )}
+            {/* Background blur effect for native; fallback for web */}
+            {Platform.OS === 'web'
+              ? <View style={styles.modalBackgroundFallback} />
+              : <BlurView intensity={50} style={styles.modalBackground} />
+            }
+
             <View style={styles.modalContent}>
               <Text style={styles.modalTitle}>Add New Medication</Text>
+
+              {/* Medication Name Input */}
               <TextInput
                 style={styles.input}
                 placeholder="Medication Name"
@@ -89,6 +151,8 @@ export default function MedicationsPage() {
                 value={newMedName}
                 onChangeText={setNewMedName}
               />
+
+              {/* Time Input */}
               <TextInput
                 style={styles.input}
                 placeholder="Time (e.g., 08:00 AM)"
@@ -96,11 +160,16 @@ export default function MedicationsPage() {
                 value={newMedTime}
                 onChangeText={setNewMedTime}
               />
+
+              {/* Modal action buttons */}
               <View style={styles.modalButtons}>
                 <TouchableOpacity style={styles.modalButton} onPress={handleSaveMedication}>
                   <Text style={styles.modalButtonText}>✔ Save</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.modalButton, styles.cancelButton]} onPress={() => setModalVisible(false)}>
+                <TouchableOpacity
+                  style={[styles.modalButton, styles.cancelButton]}
+                  onPress={() => setModalVisible(false)}
+                >
                   <Text style={styles.modalButtonText}>✖ Cancel</Text>
                 </TouchableOpacity>
               </View>
@@ -126,17 +195,30 @@ const styles = StyleSheet.create({
   },
   helpButton: {
     position: 'absolute',
-    top: 10,
-    left: 10,
+    left: 0,
+    width: 60,
+    height: 60,
+    backgroundColor: '#6F91FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  helpButtonText: {
+    color: '#FFF',
+    fontSize: 48,
+    fontWeight: 'bold',
   },
   addButton: {
     position: 'absolute',
-    top: 10,
-    right: 10,
+    bottom: 20,
+    right: 20,
   },
   medListContainer: {
-    width: '100%',
-    height: '100%',
+    flex: 1,
+    borderRadius: 10,
+    padding: 5,
+    overflow: 'hidden',
   },
   modalWrapper: {
     flex: 1,
@@ -163,7 +245,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 25,
     alignItems: 'center',
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 3 },
     shadowOpacity: 0.3,
     shadowRadius: 5,

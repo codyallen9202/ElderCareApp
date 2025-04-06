@@ -13,6 +13,7 @@ import PlusButton from '@/components/PlusButton';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { DayPicker } from 'react-native-picker-weekday'
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs
@@ -20,6 +21,7 @@ export default function MedicationsPage() {
   const [newMedName, setNewMedName] = useState('');
   const [newMedTime, setNewMedTime] = useState('');
   const [newMedStartDate, setNewMedDate] = useState('');
+  const [newMedDaysOfWeek, setNewMedDaysOfWeek] = React.useState([-1])
   const [userID, setUserID] = useState(null);
 
   // Tutorial mode state
@@ -66,12 +68,15 @@ export default function MedicationsPage() {
   }, []);
 
   // Handle '+' button press to open modal
-  const handleAddMedication = () => setModalVisible(true);
+  const handleAddMedication = () => {
+    setModalVisible(true);
+    setNewMedDaysOfWeek([-1]);
+  }
 
   // Validate and save new medication entry
   const handleSaveMedication = () => {
-    if (!newMedName.trim() || !newMedTime.trim() || !newMedStartDate.trim()) {
-      alert("Please enter medication name, time, and start date.");
+    if (!newMedName.trim() || !newMedTime.trim() || !newMedStartDate.trim() || !newMedDaysOfWeek) {
+      alert("Please enter medication name, time, start date, days of the week.");
       return;
     }
 
@@ -79,7 +84,8 @@ export default function MedicationsPage() {
       id: Date.now().toString(),
       name: newMedName,
       time: newMedTime,
-      startDate: newMedStartDate
+      startDate: newMedStartDate,
+      daysOfWeek: newMedDaysOfWeek
     };
 
     console.log("Saving new medication:", medInfo);
@@ -88,7 +94,8 @@ export default function MedicationsPage() {
     // Reset inputs and close modal
     setNewMedName('');
     setNewMedTime('');
-    setNewMedDate('')
+    setNewMedDate('');
+    setNewMedDaysOfWeek([]);
     setModalVisible(false);
   };
 
@@ -208,6 +215,31 @@ export default function MedicationsPage() {
                   }}
                 />
               )}
+
+              {/* Choose Days to take the Medication On */}
+              <View style={{ width: '100%', marginBottom: 5 }}>
+                <Text style={{ fontSize: 18, marginBottom: 1, marginTop: 5 }}>
+                  Select Days You Take Medication:
+                </Text>
+
+                <DayPicker
+                  weekdays={newMedDaysOfWeek}
+                  setWeekdays={setNewMedDaysOfWeek}
+                  activeColor="violet"
+                  textColor="black"
+                  inactiveColor= "#D3D3D3"
+                  wrapperStyles={{
+                    justifyContent: 'center',
+                    marginTop: 0, 
+                    paddingTop: 0,
+                  }}
+                  itemStyles={{
+                    marginHorizontal: 2,
+                    paddingVertical: 2,
+                    borderRadius: 10,
+                  }}
+                />
+              </View>
 
               {/* Modal action buttons */}
               <View style={styles.modalButtons}>

@@ -11,18 +11,23 @@ import { saveInfo, getUserId } from '@/functions/gen-user';
 import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
 import TutorialModeUI from '@/components/TutorialModeUI';
+import NeatDatePicker from 'react-native-neat-date-picker';
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs
   const [modalVisible, setModalVisible] = useState(false);
   const [newMedName, setNewMedName] = useState('');
   const [newMedTime, setNewMedTime] = useState('');
+  const [newMedStartDate, setNewMedDate] = useState('');
   const [userID, setUserID] = useState(null);
 
   // Tutorial mode state
   const [tutorialMode, setTutorialMode] = useState(false);
   const [clickedElements, setClickedElements] = useState({});
   const [buttonExplanation, setButtonExplanation] = useState(null);
+
+  // Date picker
+  const [showDatePicker, setShowDatePicker] = useState(false);
 
   // Statements for tutorial guidance
   const tutorialStatements = {
@@ -63,8 +68,8 @@ export default function MedicationsPage() {
 
   // Validate and save new medication entry
   const handleSaveMedication = () => {
-    if (!newMedName.trim() || !newMedTime.trim()) {
-      alert("Please enter both medication name and time.");
+    if (!newMedName.trim() || !newMedTime.trim() || !newMedStartDate.trim()) {
+      alert("Please enter medication name, time, and start date.");
       return;
     }
 
@@ -72,6 +77,7 @@ export default function MedicationsPage() {
       id: Date.now().toString(),
       name: newMedName,
       time: newMedTime,
+      startDate: newMedStartDate
     };
 
     console.log("Saving new medication:", medInfo);
@@ -80,6 +86,7 @@ export default function MedicationsPage() {
     // Reset inputs and close modal
     setNewMedName('');
     setNewMedTime('');
+    setNewMedDate('')
     setModalVisible(false);
   };
 
@@ -151,6 +158,27 @@ export default function MedicationsPage() {
                 value={newMedName}
                 onChangeText={setNewMedName}
               />
+
+              {/* Medication Start Date Input using Neat-date-picker */}
+              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ width: '100%' }}>
+              <TextInput
+                style={styles.input}
+                placeholder="Medication's Start Date"
+                placeholderTextColor="#888"
+                value={newMedStartDate}
+                editable={false}
+              />
+            </TouchableOpacity>
+
+            <NeatDatePicker
+              isVisible={showDatePicker}
+              onCancel={() => setShowDatePicker(false)}
+              onConfirm={(out) => {
+                setNewMedDate(out.dateString);
+                setShowDatePicker(false);
+              }}
+              mode={'single'}
+            />
 
               {/* Time Input */}
               <TextInput

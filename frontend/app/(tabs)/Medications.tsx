@@ -12,6 +12,7 @@ import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import NeatDatePicker from 'react-native-neat-date-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs
@@ -26,8 +27,9 @@ export default function MedicationsPage() {
   const [clickedElements, setClickedElements] = useState({});
   const [buttonExplanation, setButtonExplanation] = useState(null);
 
-  // Date picker
+  // Date/time picker visibility
   const [showDatePicker, setShowDatePicker] = useState(false);
+  const [showTimePicker, setShowTimePicker] = useState(false);
 
   // Statements for tutorial guidance
   const tutorialStatements = {
@@ -181,13 +183,31 @@ export default function MedicationsPage() {
             />
 
               {/* Time Input */}
+              <TouchableOpacity onPress={() => setShowTimePicker(true)} style={{ width: '100%' }}>
               <TextInput
                 style={styles.input}
-                placeholder="Time (e.g., 08:00 AM)"
+                placeholder="Time of Event"
                 placeholderTextColor="#888"
                 value={newMedTime}
-                onChangeText={setNewMedTime}
+                editable={false}
               />
+              </TouchableOpacity>
+
+              {showTimePicker && (
+                <DateTimePicker
+                  value={new Date()}
+                  mode="time"
+                  is24Hour={false}
+                  display="default"
+                  onChange={(_, selectedTime) => {
+                    if (selectedTime) {
+                      const timeStr = selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                      setNewMedTime(timeStr);
+                    }
+                    setShowTimePicker(false);
+                  }}
+                />
+              )}
 
               {/* Modal action buttons */}
               <View style={styles.modalButtons}>

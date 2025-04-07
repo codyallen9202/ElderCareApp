@@ -3,6 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import HelpButton from '@/components/HelpButton';
 import { SafeAreaView } from 'react-native';
+import HeaderDisplay from '@/components/HeaderDisplay';
 
 const helpText = `This page helps you track your vital signs, such as blood pressure, heart rate, and oxygen levels.`;
 
@@ -11,9 +12,9 @@ export default function VitalsPage() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* <View style={styles.header}>
-        <Text style={styles.title}>Vitals</Text>
-      </View> */}
+      <View style={styles.header}>
+        <HeaderDisplay pageTitle={'Vitals'} />
+      </View>
 
       {/* Entire list of 6 boxes */}
       <View style={styles.vitalContainer}>
@@ -103,10 +104,26 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
   },
   header: {
-    backgroundColor: '#6F91FF',
-    width: '100%',
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingBottom: 10,
+    justifyContent: 'center',
+    position: 'relative',
+  },
+  helpButton: {
+    position: 'absolute',
+    left: 0,
+    width: 60,
+    height: 60,
+    backgroundColor: '#6F91FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderTopRightRadius: 30,
+    borderBottomRightRadius: 30,
+  },
+  helpButtonText: {
+    color: '#FFF',
+    fontSize: 48,
+    fontWeight: 'bold',
   },
   title: {
     fontSize: 36,

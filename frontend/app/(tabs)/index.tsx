@@ -20,7 +20,6 @@ export default function LayoutPage() {
       //await SecureStore.deleteItemAsync('user_id'); 
       //await SecureStore.deleteItemAsync('user_type'); 
       const id = await SecureStore.getItemAsync('user_id'); 
-      console.log(id);
       if(!id) {
         console.log("Hello! You have no ID");
         router.push("/SignUpPages/SignUp");

@@ -9,12 +9,13 @@ import {
 import { BlurView } from 'expo-blur';
 import Calendar from '@/components/DisplaySchedule';
 import { EventsProvider } from '@/components/DisplayEvents';
-import { saveInfo, getUserId } from '@/functions/gen-user';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import PlusButton from '@/components/PlusButton';
 import HeaderDisplay from '@/components/HeaderDisplay';
+import * as SecureStore from 'expo-secure-store';
+import { saveInfo } from '@/functions/gen-user';
 
 export default function Schedule() {
   // Event modal and form state
@@ -46,8 +47,12 @@ export default function Schedule() {
 
   // Fetch user ID on mount
   useEffect(() => {
-    getUserId().then(setUserID);
-  }, []);
+      async function loadId () {
+        const id = await SecureStore.getItemAsync('user_id')
+        setUserID(id);
+      }
+      loadId();
+    }, []);
 
   // Handle form field updates
   const updateEvent = (key, value) => setEvent(prev => ({ ...prev, [key]: value }));

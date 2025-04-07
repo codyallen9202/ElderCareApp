@@ -7,13 +7,14 @@ import { BlurView } from 'expo-blur';
 import MedList from '@/components/MedList';
 import HelpButton from '@/components/HelpButton';
 import HeaderDisplay from '@/components/HeaderDisplay';
-import { saveInfo, getUserId } from '@/functions/gen-user';
+import { saveInfo } from '@/functions/gen-user';
 import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DayPicker } from 'react-native-picker-weekday'
+import * as SecureStore from 'expo-secure-store';
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs
@@ -64,7 +65,11 @@ export default function MedicationsPage() {
 
   // Fetch user ID on mount
   useEffect(() => {
-    getUserId().then(setUserID);
+    async function loadId () {
+      const id = await SecureStore.getItemAsync('user_id');
+      setUserID(id);
+    }
+    loadId();
   }, []);
 
   // Handle '+' button press to open modal

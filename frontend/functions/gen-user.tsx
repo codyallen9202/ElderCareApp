@@ -10,26 +10,36 @@ function bytesToHex(bytes: Uint8Array): string {
       .join("");
   }
   
-export async function getUserId() {
-    let userId = await SecureStore.getItemAsync('user_id');
-    if (!userId) {
-      const randomBytes = await ExpoCrypto.getRandomBytesAsync(12);  // Using expo-crypto for random bytes
-      userId = bytesToHex(randomBytes);
-      await SecureStore.setItemAsync('user_id', userId);
-    }
+export async function createUserId(userType: string, referral: string) {
+  let userId = "null";
+  if (userType == "Elder") {
+    const randomBytes = await ExpoCrypto.getRandomBytesAsync(12);  // Using expo-crypto for random bytes
+    userId = bytesToHex(randomBytes);
+  }
+  else if (userType == "Caregiver") {
+    userId = referral;
+  }
+  else {
+    console.log("Error Creating ID: Invalid User Type");
+  }
+  await SecureStore.setItemAsync('user_id', userId);
+  await SecureStore.setItemAsync('user_type', userType);
   return userId;
 }
 
-export async function InitializeFirestoreUser(userID: string) {
+export async function InitializeFirestoreUser(userID: string, name: string, age: string, UserType: string) {
   const userDocRef = doc(db, "Users", userID);
   const userDocSnap = await getDoc(userDocRef);
   if (!userDocSnap.exists()) {
   
     try {
         await setDoc(doc(db, "Users", userID), {
-        timestamp: Date.now()
+        timestamp: Date.now(),
+        Name: name,
+        Age: age,
+        UserType: UserType
         });
-        alert('User added!');
+        console.log('User added!');
     
     } catch (error) {
         console.error("Error creating user in Firestore:", error);

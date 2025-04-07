@@ -12,11 +12,12 @@ import {
   Platform,
 } from 'react-native';
 import { sendSMSBlast } from '@/components/smsBlast';
-import { saveInfo, getUserId, deleteCaretaker } from '@/functions/gen-user';
+import { saveInfo, deleteCaretaker } from '@/functions/gen-user';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseconfig';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import HeaderDisplay from '@/components/HeaderDisplay';
+import * as SecureStore from 'expo-secure-store';
 
 export default function CaregiversList() {
   const [caregivers, setCaregivers] = useState([]);
@@ -37,7 +38,7 @@ export default function CaregiversList() {
 
   useEffect(() => {
     (async () => {
-      const id = await getUserId();
+      const id = await SecureStore.getItemAsync('user_id');
       setUserID(id);
       if (id) {
         const snapshot = await getDocs(collection(db, 'Users', id, 'Caretakers'));

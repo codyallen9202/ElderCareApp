@@ -2,7 +2,7 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseconfig'; // Adjust the path as needed
-import { getUserId } from '@/functions/gen-user';
+import * as SecureStore from 'expo-secure-store';
 
 export interface MedicationType {
   id: string;
@@ -38,7 +38,7 @@ export const MedicationsProvider: React.FC<MedicationsProviderProps> = ({ childr
     let unsubscribe: (() => void) | undefined;
 
     async function subscribeToMedications() {
-      const userId = await getUserId();
+      const userId = await SecureStore.getItemAsync('user_id');
       if (!userId) return;
 
       // Make sure your Firestore data is organized as Users/{userId}/Medications

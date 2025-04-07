@@ -6,9 +6,10 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Calendar from '../../components/DisplaySchedule';
 import { EventsProvider } from '../../components/DisplayEvents';
-import { getUserId, InitializeFirestoreUser } from '../../functions/gen-user';
+import { InitializeFirestoreUser } from '../../functions/gen-user';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import HomePageSchedule from '@/components/HomePageSchedule';
+import * as SecureStore from 'expo-secure-store';
 
 export default function LayoutPage() {
   const router = useRouter();
@@ -16,9 +17,15 @@ export default function LayoutPage() {
 
   useEffect(() => {
     async function loadUserId() {
-      const id = await getUserId();
+      //await SecureStore.deleteItemAsync('user_id'); 
+      //await SecureStore.deleteItemAsync('user_type'); 
+      const id = await SecureStore.getItemAsync('user_id'); 
+      console.log(id);
+      if(!id) {
+        console.log("Hello! You have no ID");
+        router.push("/SignUpPages/SignUp");
+      }
       setUserID(id);
-      InitializeFirestoreUser(id);
     }
     loadUserId();
   }, []);

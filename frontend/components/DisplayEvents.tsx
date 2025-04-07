@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebaseconfig'; // Adjust path as needed
-import { getUserId } from '@/functions/gen-user';
+import * as SecureStore from 'expo-secure-store';
 
 const EventsContext = createContext<EventsContextType | undefined>(undefined);
 
@@ -36,7 +36,7 @@ export const EventsProvider: React.FC<EventsProviderProps> = ({ children }) => {
     let unsubscribe: (() => void) | undefined;
 
     async function subscribeToEvents() {
-      const userId = await getUserId();
+      const userId = await SecureStore.getItemAsync('user_id');
       if (!userId) return;
 
       const eventsRef = collection(db, "Users", userId, "CalendarEvents");

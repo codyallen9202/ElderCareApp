@@ -15,6 +15,7 @@ import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { DayPicker } from 'react-native-picker-weekday'
 import * as SecureStore from 'expo-secure-store';
+import { SafeAreaView } from 'react-native';
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs
@@ -65,7 +66,7 @@ export default function MedicationsPage() {
 
   // Fetch user ID on mount
   useEffect(() => {
-    async function loadId () {
+    async function loadId() {
       const id = await SecureStore.getItemAsync('user_id');
       setUserID(id);
     }
@@ -106,7 +107,7 @@ export default function MedicationsPage() {
 
   return (
     <MedicationsProvider>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {/* Header section with date and help */}
         <View style={styles.header}>
           <HeaderDisplay pageTitle={'Medications'} />
@@ -175,34 +176,34 @@ export default function MedicationsPage() {
 
               {/* Medication Start Date Input using Neat-date-picker */}
               <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ width: '100%' }}>
-              <TextInput
-                style={styles.input}
-                placeholder="Medication's Start Date"
-                placeholderTextColor="#888"
-                value={newMedStartDate}
-                editable={false}
-              />
-            </TouchableOpacity>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Medication's Start Date"
+                  placeholderTextColor="#888"
+                  value={newMedStartDate}
+                  editable={false}
+                />
+              </TouchableOpacity>
 
-            <NeatDatePicker
-              isVisible={showDatePicker}
-              onCancel={() => setShowDatePicker(false)}
-              onConfirm={(out) => {
-                setNewMedDate(out.dateString);
-                setShowDatePicker(false);
-              }}
-              mode={'single'}
-            />
+              <NeatDatePicker
+                isVisible={showDatePicker}
+                onCancel={() => setShowDatePicker(false)}
+                onConfirm={(out) => {
+                  setNewMedDate(out.dateString);
+                  setShowDatePicker(false);
+                }}
+                mode={'single'}
+              />
 
               {/* Time Input */}
               <TouchableOpacity onPress={() => setShowTimePicker(true)} style={{ width: '100%' }}>
-              <TextInput
-                style={styles.input}
-                placeholder="Time of Event"
-                placeholderTextColor="#888"
-                value={newMedTime}
-                editable={false}
-              />
+                <TextInput
+                  style={styles.input}
+                  placeholder="Time of Event"
+                  placeholderTextColor="#888"
+                  value={newMedTime}
+                  editable={false}
+                />
               </TouchableOpacity>
 
               {showTimePicker && (
@@ -232,10 +233,10 @@ export default function MedicationsPage() {
                   setWeekdays={setNewMedDaysOfWeek}
                   activeColor="violet"
                   textColor="black"
-                  inactiveColor= "#D3D3D3"
+                  inactiveColor="#D3D3D3"
                   wrapperStyles={{
                     justifyContent: 'center',
-                    marginTop: 0, 
+                    marginTop: 0,
                     paddingTop: 0,
                   }}
                   itemStyles={{
@@ -261,7 +262,7 @@ export default function MedicationsPage() {
             </View>
           </View>
         </Modal>
-      </View>
+      </SafeAreaView>
     </MedicationsProvider>
   );
 }

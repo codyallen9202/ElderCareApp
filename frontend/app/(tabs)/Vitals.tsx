@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import HelpButton from '@/components/HelpButton';
+import { SafeAreaView } from 'react-native';
 
 const helpText = `This page helps you track your vital signs, such as blood pressure, heart rate, and oxygen levels.`;
 
@@ -9,7 +10,7 @@ export default function VitalsPage() {
   const router = useRouter();
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       {/* <View style={styles.header}>
         <Text style={styles.title}>Vitals</Text>
       </View> */}
@@ -91,7 +92,7 @@ export default function VitalsPage() {
           </View>
         </View>
       </View>
-    </View>
+    </SafeAreaView>
   );
 }
 

@@ -18,6 +18,7 @@ import { db } from '../../firebaseconfig';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import * as SecureStore from 'expo-secure-store';
+import { SafeAreaView } from 'react-native';
 
 export default function CaregiversList() {
   const [caregivers, setCaregivers] = useState([]);
@@ -113,7 +114,7 @@ export default function CaregiversList() {
   );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
 
       <View style={styles.header}>
         <TouchableOpacity
@@ -199,7 +200,7 @@ export default function CaregiversList() {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 

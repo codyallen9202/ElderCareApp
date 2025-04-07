@@ -10,6 +10,7 @@ import { InitializeFirestoreUser } from '../../functions/gen-user';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import HomePageSchedule from '@/components/HomePageSchedule';
 import * as SecureStore from 'expo-secure-store';
+import { SafeAreaView } from 'react-native';
 
 export default function LayoutPage() {
   const router = useRouter();
@@ -19,8 +20,8 @@ export default function LayoutPage() {
     async function loadUserId() {
       //await SecureStore.deleteItemAsync('user_id'); 
       //await SecureStore.deleteItemAsync('user_type'); 
-      const id = await SecureStore.getItemAsync('user_id'); 
-      if(!id) {
+      const id = await SecureStore.getItemAsync('user_id');
+      if (!id) {
         console.log("Hello! You have no ID");
         router.push("/SignUpPages/SignUp");
       }
@@ -31,7 +32,7 @@ export default function LayoutPage() {
 
   return (
     <EventsProvider>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {/* Calendar section showing today's events */}
         <View style={styles.header}>
           <HeaderDisplay pageTitle={'Home'} />
@@ -77,7 +78,7 @@ export default function LayoutPage() {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </SafeAreaView>
     </EventsProvider>
   );
 }

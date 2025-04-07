@@ -16,6 +16,7 @@ import PlusButton from '@/components/PlusButton';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import * as SecureStore from 'expo-secure-store';
 import { saveInfo } from '@/functions/gen-user';
+import { SafeAreaView } from 'react-native';
 
 export default function Schedule() {
   // Event modal and form state
@@ -47,12 +48,12 @@ export default function Schedule() {
 
   // Fetch user ID on mount
   useEffect(() => {
-      async function loadId () {
-        const id = await SecureStore.getItemAsync('user_id')
-        setUserID(id);
-      }
-      loadId();
-    }, []);
+    async function loadId() {
+      const id = await SecureStore.getItemAsync('user_id')
+      setUserID(id);
+    }
+    loadId();
+  }, []);
 
   // Handle form field updates
   const updateEvent = (key, value) => setEvent(prev => ({ ...prev, [key]: value }));
@@ -118,7 +119,7 @@ export default function Schedule() {
 
   return (
     <EventsProvider>
-      <View style={styles.container}>
+      <SafeAreaView style={styles.container}>
         {/* Header with buttons */}
         <View style={styles.header}>
           <TouchableOpacity
@@ -174,7 +175,7 @@ export default function Schedule() {
           </View>
 
         )}
-      </View>
+      </SafeAreaView>
 
       {/* Modal for adding a new calendar event */}
       <Modal

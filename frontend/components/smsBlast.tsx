@@ -16,3 +16,9 @@ export const sendSMSBlast = (caregivers: { id: string; name: string; phone: stri
 
   Linking.openURL(smsUrl).catch((err) => console.error('Error opening SMS app:', err));
 };
+export const sendInviteSMS = (phone: string, inviteCode: string) => {
+  const message = encodeURIComponent(`You've been added as a caregiver! Your invite code is: ${inviteCode}`);
+  const smsUrl = `sms:${phone}?body=${message}`;
+
+  Linking.openURL(smsUrl).catch((err) => console.error('Error sending invite SMS:', err));
+};

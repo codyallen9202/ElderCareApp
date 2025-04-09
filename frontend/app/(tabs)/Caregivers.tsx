@@ -11,7 +11,7 @@ import {
   Image,
   Platform,
 } from 'react-native';
-import { sendSMSBlast } from '@/components/smsBlast';
+import { sendSMSBlast, sendInviteSMS } from '@/components/smsBlast';
 import { saveInfo, deleteCaretaker } from '@/functions/gen-user';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../firebaseconfig';
@@ -56,18 +56,27 @@ export default function CaregiversList() {
   const handleAddCaregiver = () => !tutorialMode && setAddModalVisible(true);
 
   const handleSaveCaregiver = () => {
-    if (!newCaregiverName.trim() || !newCaregiverPhone.trim()) return alert('Please enter both name and phone number.');
+    if (!newCaregiverName.trim() || !newCaregiverPhone.trim())
+      return alert('Please enter both name and phone number.');
+  
     const newCaregiver = {
       id: Date.now().toString(),
       name: newCaregiverName,
       phone: newCaregiverPhone,
     };
+  
     setCaregivers(prev => [...prev, newCaregiver]);
     saveInfo(newCaregiver, userID, 'Caretakers');
+  
+    // Send SMS invite with dummy invite code
+    const inviteCode = 'DEVICE123456';
+    sendInviteSMS(newCaregiver.phone, inviteCode);
+  
     setNewCaregiverName('');
     setNewCaregiverPhone('');
     setAddModalVisible(false);
   };
+  
 
   const handleDeleteCaregiver = id => {
     setCaregivers(prev => prev.filter(c => c.id !== id));

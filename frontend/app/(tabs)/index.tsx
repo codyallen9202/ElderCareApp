@@ -1,16 +1,20 @@
-// index.tsx
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
+
 import { useRouter } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
-import Calendar from '../../components/DisplaySchedule';
+import * as SecureStore from 'expo-secure-store';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TouchableOpacity,
+  SafeAreaView,
+} from 'react-native';
+
 import { EventsProvider } from '../../components/DisplayEvents';
-import { InitializeFirestoreUser } from '../../functions/gen-user';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import HomePageSchedule from '@/components/HomePageSchedule';
-import * as SecureStore from 'expo-secure-store';
-import { SafeAreaView } from 'react-native';
 
 export default function LayoutPage() {
   const router = useRouter();

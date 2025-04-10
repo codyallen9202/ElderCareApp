@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import {
-  StyleSheet, View, Text, TouchableOpacity,
-} from 'react-native';
+
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+
 import MedList from '@/components/MedList';
 import HeaderDisplay from '@/components/HeaderDisplay';
-import { saveInfo } from '@/functions/gen-user';
-import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
 import TutorialModeUI from '@/components/TutorialModeUI';
-import * as SecureStore from 'expo-secure-store';
-import { SafeAreaView } from 'react-native';
 import AddMedicationModal from '@/components/AddMedicationModal';
+import { saveInfo } from '@/functions/gen-user';
+
+import { MedicationsProvider } from '../../components/MedicationsProvider';
+
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs

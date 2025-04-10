@@ -2,21 +2,29 @@
 // add an event to the calendar. 
 
 import React, { useState, useEffect } from 'react';
-import {
-  View, Text, StyleSheet, FlatList, TouchableOpacity,
-  Modal, Platform, TextInput
+
+import { 
+  View, 
+  Text, 
+  StyleSheet, 
+  FlatList, 
+  TouchableOpacity, 
+  Modal, 
+  Platform, 
+  TextInput, 
+  SafeAreaView 
 } from 'react-native';
 import { BlurView } from 'expo-blur';
-import Calendar from '@/components/DisplaySchedule';
-import { EventsProvider } from '@/components/DisplayEvents';
+import * as SecureStore from 'expo-secure-store';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+
+import Calendar from '@/components/DisplaySchedule';
+import { EventsProvider } from '@/components/DisplayEvents';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import PlusButton from '@/components/PlusButton';
 import HeaderDisplay from '@/components/HeaderDisplay';
-import * as SecureStore from 'expo-secure-store';
 import { saveInfo } from '@/functions/gen-user';
-import { SafeAreaView } from 'react-native';
 
 export default function Schedule() {
   // Event modal and form state

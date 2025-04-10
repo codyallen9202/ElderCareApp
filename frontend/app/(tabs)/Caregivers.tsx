@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+
 import { BlurView } from 'expo-blur';
-import {
+import { 
   StyleSheet,
   View,
   Text,
@@ -10,15 +11,18 @@ import {
   TextInput,
   Image,
   Platform,
+  SafeAreaView,
 } from 'react-native';
+import * as SecureStore from 'expo-secure-store';
+import { collection, getDocs } from 'firebase/firestore';
+
 import { sendSMSBlast, sendInviteSMS } from '@/components/smsBlast';
 import { saveInfo, deleteCaretaker } from '@/functions/gen-user';
-import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebaseconfig';
 import TutorialModeUI from '@/components/TutorialModeUI';
 import HeaderDisplay from '@/components/HeaderDisplay';
-import * as SecureStore from 'expo-secure-store';
-import { SafeAreaView } from 'react-native';
+
+import { db } from '../../firebaseconfig';
+
 
 export default function CaregiversList() {
   const [caregivers, setCaregivers] = useState([]);

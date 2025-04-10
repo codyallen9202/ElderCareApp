@@ -1,12 +1,19 @@
 // MedList.tsx
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, Pressable, FlatList } from 'react-native';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { useMedications } from './MedicationsProvider';
+import * as SecureStore from 'expo-secure-store';
+import { handleDeleteMedication } from '@/functions/handle-medication';
+
 
 export default function MedList() {
   const [selectedMeds, setSelectedMeds] = useState<{ [key: string]: boolean }>({});
   const { medications } = useMedications();
+
+  const handleDelete = async (id: string) => {
+    const userId = await SecureStore.getItemAsync('user_id');
+    await handleDeleteMedication(id, userId);
+  };  
 
   // Toggle selection style on press
   const handlePress = (id: string, name: string) => {
@@ -28,7 +35,9 @@ export default function MedList() {
               <Text style={styles.name}>{item.name}</Text>
               <Text style={styles.details}>{item.time}</Text>
             </View>
-            <MaterialCommunityIcons name="pill" size={60} color={item.pillColor} />
+            <Pressable onPress={() => handleDelete(item.id)}>
+              <Text style={styles.deleteText}>✖</Text>
+            </Pressable>
           </Pressable>
         )}
       />
@@ -69,4 +78,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: "#666",
   },
+  deleteText: {
+    fontSize: 30,
+    color: '#F44336',
+    fontWeight: 'bold',
+    alignSelf: 'center',
+    marginLeft: 10,
+  },
+  
 });

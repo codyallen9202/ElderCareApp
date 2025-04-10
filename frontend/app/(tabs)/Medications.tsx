@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import {
   StyleSheet, View, Text, TouchableOpacity,
-  Modal, TextInput, Platform
 } from 'react-native';
-import { BlurView } from 'expo-blur';
 import MedList from '@/components/MedList';
-import HelpButton from '@/components/HelpButton';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import { saveInfo } from '@/functions/gen-user';
 import { MedicationsProvider } from '../../components/MedicationsProvider';
 import PlusButton from '@/components/PlusButton';
 import TutorialModeUI from '@/components/TutorialModeUI';
-import NeatDatePicker from 'react-native-neat-date-picker';
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { DayPicker } from 'react-native-picker-weekday'
 import * as SecureStore from 'expo-secure-store';
 import { SafeAreaView } from 'react-native';
+import AddMedicationModal from '@/components/AddMedicationModal';
 
 export default function MedicationsPage() {
   // Modal visibility and form inputs
@@ -30,10 +25,6 @@ export default function MedicationsPage() {
   const [tutorialMode, setTutorialMode] = useState(false);
   const [clickedElements, setClickedElements] = useState({});
   const [buttonExplanation, setButtonExplanation] = useState(null);
-
-  // Date/time picker visibility
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
 
   // Statements for tutorial guidance
   const tutorialStatements = {
@@ -79,32 +70,6 @@ export default function MedicationsPage() {
     setNewMedDaysOfWeek([-1]);
   }
 
-  // Validate and save new medication entry
-  const handleSaveMedication = () => {
-    if (!newMedName.trim() || !newMedTime.trim() || !newMedStartDate.trim() || !newMedDaysOfWeek) {
-      alert("Please enter medication name, time, start date, days of the week.");
-      return;
-    }
-
-    const medInfo = {
-      id: Date.now().toString(),
-      name: newMedName,
-      time: newMedTime,
-      startDate: newMedStartDate,
-      daysOfWeek: newMedDaysOfWeek
-    };
-
-    console.log("Saving new medication:", medInfo);
-    saveInfo(medInfo, userID, "Medications");
-
-    // Reset inputs and close modal
-    setNewMedName('');
-    setNewMedTime('');
-    setNewMedDate('');
-    setNewMedDaysOfWeek([]);
-    setModalVisible(false);
-  };
-
   return (
     <MedicationsProvider>
       <SafeAreaView style={styles.container}>
@@ -149,119 +114,15 @@ export default function MedicationsPage() {
         )}
 
         {/* Add medication modal */}
-        <Modal
-          animationType="slide"
-          transparent
+        <AddMedicationModal
           visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalWrapper}>
-            {/* Background blur effect for native; fallback for web */}
-            {Platform.OS === 'web'
-              ? <View style={styles.modalBackgroundFallback} />
-              : <BlurView intensity={50} style={styles.modalBackground} />
-            }
-
-            <View style={styles.modalContent}>
-              <Text style={styles.modalTitle}>Add New Medication</Text>
-
-              {/* Medication Name Input */}
-              <TextInput
-                style={styles.input}
-                placeholder="Medication Name"
-                placeholderTextColor="#888"
-                value={newMedName}
-                onChangeText={setNewMedName}
-              />
-
-              {/* Medication Start Date Input using Neat-date-picker */}
-              <TouchableOpacity onPress={() => setShowDatePicker(true)} style={{ width: '100%' }}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Medication's Start Date"
-                  placeholderTextColor="#888"
-                  value={newMedStartDate}
-                  editable={false}
-                />
-              </TouchableOpacity>
-
-              <NeatDatePicker
-                isVisible={showDatePicker}
-                onCancel={() => setShowDatePicker(false)}
-                onConfirm={(out) => {
-                  setNewMedDate(out.dateString);
-                  setShowDatePicker(false);
-                }}
-                mode={'single'}
-              />
-
-              {/* Time Input */}
-              <TouchableOpacity onPress={() => setShowTimePicker(true)} style={{ width: '100%' }}>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Time of Event"
-                  placeholderTextColor="#888"
-                  value={newMedTime}
-                  editable={false}
-                />
-              </TouchableOpacity>
-
-              {showTimePicker && (
-                <DateTimePicker
-                  value={new Date()}
-                  mode="time"
-                  is24Hour={false}
-                  display="default"
-                  onChange={(_, selectedTime) => {
-                    if (selectedTime) {
-                      const timeStr = selectedTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                      setNewMedTime(timeStr);
-                    }
-                    setShowTimePicker(false);
-                  }}
-                />
-              )}
-
-              {/* Choose Days to take the Medication On */}
-              <View style={{ width: '100%', marginBottom: 5 }}>
-                <Text style={{ fontSize: 18, marginBottom: 1, marginTop: 5 }}>
-                  Select Days You Take Medication:
-                </Text>
-
-                <DayPicker
-                  weekdays={newMedDaysOfWeek}
-                  setWeekdays={setNewMedDaysOfWeek}
-                  activeColor="violet"
-                  textColor="black"
-                  inactiveColor="#D3D3D3"
-                  wrapperStyles={{
-                    justifyContent: 'center',
-                    marginTop: 0,
-                    paddingTop: 0,
-                  }}
-                  itemStyles={{
-                    marginHorizontal: 2,
-                    paddingVertical: 2,
-                    borderRadius: 10,
-                  }}
-                />
-              </View>
-
-              {/* Modal action buttons */}
-              <View style={styles.modalButtons}>
-                <TouchableOpacity style={styles.modalButton} onPress={handleSaveMedication}>
-                  <Text style={styles.modalButtonText}>✔ Save</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.modalButton, styles.cancelButton]}
-                  onPress={() => setModalVisible(false)}
-                >
-                  <Text style={styles.modalButtonText}>✖ Cancel</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal>
+          onClose={() => setModalVisible(false)}
+          onSave={(medInfo) => {
+            console.log("Saving new medication:", medInfo);
+            saveInfo(medInfo, userID, "Medications");
+          }}
+          userID={userID}
+        />
       </SafeAreaView>
     </MedicationsProvider>
   );

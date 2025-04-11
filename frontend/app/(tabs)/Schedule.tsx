@@ -223,7 +223,10 @@ export default function Schedule() {
             <NeatDatePicker
               isVisible={showDatePicker}
               onCancel={() => setShowDatePicker(false)}
-              onConfirm={(out) => updateEvent('date', out.dateString)}
+              onConfirm={(out) => {
+                updateEvent('date', out.dateString);
+                setShowDatePicker(false);
+              }}
               mode={'single'}
             />
 

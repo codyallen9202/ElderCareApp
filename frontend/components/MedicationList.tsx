@@ -10,6 +10,18 @@ export default function MedList() {
   const [selectedMeds, setSelectedMeds] = useState<{ [key: string]: boolean }>({});
   const { medications } = useMedications();
 
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // strip time for accurate comparison
+
+  const todaysMedications = medications.filter(med => {
+    const isToday = med.days.includes(new Date().getDay() + 1);
+
+    const startDate = new Date(med.startDate); // assuming med.start_date is 'YYYY-MM-DD'
+    startDate.setHours(0, 0, 0, 0); // strip time as well
+
+    return isToday && today >= startDate;
+  }); 
+
   const handleDelete = async (id: string) => {
     const userId = await SecureStore.getItemAsync('user_id');
     await handleDeleteMedication(id, userId);
@@ -22,8 +34,9 @@ export default function MedList() {
 
   return (
     <View style={styles.container}>
+      
       <FlatList
-        data={medications}
+        data={todaysMedications}
         keyExtractor={(item) => item.id}
         showsVerticalScrollIndicator={false}
         renderItem={({ item }) => (

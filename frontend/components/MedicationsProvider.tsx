@@ -50,8 +50,9 @@ export const MedicationsProvider: React.FC<MedicationsProviderProps> = ({ childr
             id: doc.id, // using doc id; adjust if your data uses another id field
             name: data.name || "Unnamed Medication",
             pillColor: data.pillColor || "#000000",
-            days: data.days || [0, 0, 0, 0, 0, 0, 0],
+            days: data.daysOfWeek || [0, 0, 0, 0, 0, 0, 0],
             time: data.time || "Unknown Time",
+            startDate: data.startDate,
           };
         });
         setMedications(medsData);

@@ -73,7 +73,7 @@ export default function CaregiversList() {
     saveInfo(newCaregiver, userID, 'Caretakers');
   
     // Send SMS invite with dummy invite code
-    const inviteCode = 'DEVICE123456';
+    const inviteCode = userID;
     sendInviteSMS(newCaregiver.phone, inviteCode);
   
     setNewCaregiverName('');

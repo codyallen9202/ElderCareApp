@@ -27,8 +27,8 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Heart Rate</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>76</Text>
-              <Text style={styles.smallText}>Beats/Minute</Text>
+              <Text style={styles.bigText}>N/A</Text>
+              {/* <Text style={styles.smallText}>Beats/Minute</Text> */}
             </View>
           </View>
 
@@ -38,7 +38,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Blood Oxygen</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>94%</Text>
+              <Text style={styles.bigText}>N/A</Text>
             </View>
           </View>
         </View>
@@ -52,8 +52,8 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Breathing Rate</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>15</Text>
-              <Text style={styles.smallText}>Breaths/Minute</Text>
+              <Text style={styles.bigText}>N/A</Text>
+              {/* <Text style={styles.smallText}>Breaths/Minute</Text> */}
             </View>
           </View>
 
@@ -63,7 +63,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Steps</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>873</Text>
+              <Text style={styles.bigText}>N/A</Text>
             </View>
           </View>
         </View>
@@ -77,7 +77,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Calories Burned</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>351</Text>
+              <Text style={styles.bigText}>N/A</Text>
             </View>
           </View>
 
@@ -87,8 +87,8 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Sleep Duration</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>7hr</Text>
-              <Text style={styles.bigText}>12min</Text>
+              <Text style={styles.bigText}>N/A</Text>
+              {/* <Text style={styles.bigText}>12min</Text> */}
             </View>
           </View>
         </View>
@@ -108,6 +108,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    height: "12%"
   },
   helpButton: {
     position: 'absolute',
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
   },
   vitalContainer: {
     width: '100%',
-    height: '100%',
+    height: '88%',
   },
   vitalsRow: {
     width: '100%',

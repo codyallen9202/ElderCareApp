@@ -1,14 +1,15 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
+import Config from "react-native-config";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyB25IT2JY6Avzzgnu2Pi9VKiqFgaGj4Q5Q",
-  authDomain: "eldercareapp-7e8af.firebaseapp.com",
-  projectId: "eldercareapp-7e8af",
-  storageBucket: "eldercareapp-7e8af.firebasestorage.app",
-  messagingSenderId: "100066008222",
-  appId: "1:100066008222:web:863a7bb86c042e6ddb6f8f",
-  measurementId: "G-CK9HKJBT00"
+  apiKey: Config.REACT_APP_api_key,
+  authDomain: Config.REACT_APP_authDomain,
+  projectId: Config.REACT_APP_projectId,
+  storageBucket: Config.REACT_APP_storageBucket,
+  messagingSenderId: Config.REACT_APP_messagingSenderId,
+  appId: Config.REACT_APP_appId,
+  measurementId: Config.REACT_APP_measurementId
 };
 
 // Initialize Firebase

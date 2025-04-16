@@ -2,13 +2,14 @@ import React from 'react';
 import { StyleSheet, View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
 import HelpButton from '@/components/HelpButton';
-import { SafeAreaView } from 'react-native';
+import useHealthData from '@/components/useHealthData';
 import HeaderDisplay from '@/components/HeaderDisplay';
+import { SafeAreaView } from 'react-native';
 
 const helpText = `This page helps you track your vital signs, such as blood pressure, heart rate, and oxygen levels.`;
 
 export default function VitalsPage() {
-  const router = useRouter();
+  const vitals = useHealthData();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -27,8 +28,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Heart Rate</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>N/A</Text>
-              {/* <Text style={styles.smallText}>Beats/Minute</Text> */}
+              <Text style={styles.bigText}>{vitals.heartRate}</Text>
             </View>
           </View>
 
@@ -38,7 +38,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Blood Oxygen</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>N/A</Text>
+              <Text style={styles.bigText}>{vitals.bloodOxygen}</Text>
             </View>
           </View>
         </View>
@@ -52,8 +52,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Breathing Rate</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>N/A</Text>
-              {/* <Text style={styles.smallText}>Breaths/Minute</Text> */}
+              <Text style={styles.bigText}>{vitals.respiratoryRate}</Text>
             </View>
           </View>
 
@@ -63,7 +62,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Steps</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>N/A</Text>
+              <Text style={styles.bigText}>{vitals.steps}</Text>
             </View>
           </View>
         </View>
@@ -77,7 +76,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Calories Burned</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>N/A</Text>
+              <Text style={styles.bigText}>{vitals.calories}</Text>
             </View>
           </View>
 
@@ -87,8 +86,7 @@ export default function VitalsPage() {
               <Text style={styles.vitalText}>Sleep Duration</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>N/A</Text>
-              {/* <Text style={styles.bigText}>12min</Text> */}
+              <Text style={styles.bigText}>{vitals.sleepDuration}</Text>
             </View>
           </View>
         </View>
@@ -104,27 +102,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#F4F4F4',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    height: "12%"
-  },
-  helpButton: {
-    position: 'absolute',
-    left: 0,
-    width: 60,
-    height: 60,
     backgroundColor: '#6F91FF',
-    justifyContent: 'center',
+    width: '100%',
     alignItems: 'center',
-    borderTopRightRadius: 30,
-    borderBottomRightRadius: 30,
-  },
-  helpButtonText: {
-    color: '#FFF',
-    fontSize: 48,
-    fontWeight: 'bold',
+    paddingBottom: 10,
   },
   title: {
     fontSize: 36,
@@ -133,7 +114,7 @@ const styles = StyleSheet.create({
   },
   vitalContainer: {
     width: '100%',
-    height: '88%',
+    height: '100%',
   },
   vitalsRow: {
     width: '100%',

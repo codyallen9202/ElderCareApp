@@ -5,7 +5,7 @@ import {
 import { BlurView } from 'expo-blur';
 import NeatDatePicker from 'react-native-neat-date-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { DayPicker } from 'react-native-picker-weekday';
+/*{import { DayPicker } from 'react-native-picker-weekday'; }*/
 import { handleAddMedication } from '@/functions/handle-medication';
 
 interface AddMedicationModalProps {
@@ -122,6 +122,7 @@ export default function AddMedicationModal({
           )}
 
           <Text style={{ fontSize: 18, marginBottom: 5 }}>Select Days:</Text>
+          {/*}
           <DayPicker
             weekdays={newMedDaysOfWeek}
             setWeekdays={setNewMedDaysOfWeek}
@@ -129,6 +130,7 @@ export default function AddMedicationModal({
             textColor="black"
             inactiveColor="#D3D3D3"
           />
+          */}
 
           <View style={styles.modalButtons}>
             <TouchableOpacity style={styles.modalButton} onPress={handleSave}>

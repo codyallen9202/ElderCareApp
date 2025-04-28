@@ -1,6 +1,6 @@
 // Based on memory game found: https://javascript.plainenglish.io/building-a-card-memory-game-in-react-e6400b226b8f
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Button } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Button, SafeAreaView } from 'react-native';
 import HeaderDisplay from '@/components/HeaderDisplay';
 import TutorialModeUI from '@/components/TutorialModeUI';
 
@@ -123,7 +123,7 @@ export default function MemoryGame() {
       : {};
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => setTutorialMode(prev => !prev)}
@@ -132,7 +132,7 @@ export default function MemoryGame() {
         >
           <Text style={styles.helpButtonText}>?</Text>
         </TouchableOpacity>
-        <HeaderDisplay pageTitle={'Memory Game'} />
+        <HeaderDisplay pageTitle={'Memory'} />
       </View>
 
       <TutorialModeUI
@@ -202,7 +202,7 @@ export default function MemoryGame() {
           </View>
         </View>
       </Modal>
-    </View>
+    </SafeAreaView>
   );
 }
 

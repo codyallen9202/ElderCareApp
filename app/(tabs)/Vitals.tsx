@@ -1,19 +1,32 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TouchableOpacity, SafeAreaView, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import HelpButton from '@/components/HelpButton';
-import { SafeAreaView } from 'react-native';
 import HeaderDisplay from '@/components/HeaderDisplay';
-
-const helpText = `This page helps you track your vital signs, such as blood pressure, heart rate, and oxygen levels.`;
 
 export default function VitalsPage() {
   const router = useRouter();
+
+  const handlePress = () => {
+    Alert.alert(
+      "Help",
+      "For this to page to work correctly, an Apple Watch is required.",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "OK", onPress: () => console.log("OK Pressed") }
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <HeaderDisplay pageTitle={'Vitals'} />
+        <TouchableOpacity
+            onPress={handlePress}
+            style={styles.helpButton}
+          >
+          <Text style={styles.helpButtonText}>?</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Entire list of 6 boxes */}

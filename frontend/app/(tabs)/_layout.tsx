@@ -55,7 +55,13 @@ export default function TabLayout() {
           tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="user-friends" color={color} />,
         }}
       />
-      
+      <Tabs.Screen
+        name="MemoryGame"
+        options={{
+          title: '',
+          tabBarIcon: ({ color }) => <FontAwesome5 size={28} name="brain" color={color} />,
+        }}
+      />
     </Tabs>
   );
 }

@@ -35,10 +35,10 @@ export default function VitalsPage() {
           {/* Top Right */}
           <View style={styles.singleVital}>
             <View style={styles.singleVitalHeader}>
-              <Text style={styles.vitalText}>Blood Oxygen</Text>
+              <Text style={styles.vitalText}>Resting Heart Rate</Text>
             </View>
             <View style={styles.singleVitalContent}>
-              <Text style={styles.bigText}>{vitals.bloodOxygen}</Text>
+              <Text style={styles.bigText}>{vitals.restingHeartRate}</Text>
             </View>
           </View>
         </View>

@@ -7,7 +7,7 @@ const permissions: HealthKitPermissions = {
       read: [
         AppleHealthKit.Constants.Permissions.HeartRate,
         AppleHealthKit.Constants.Permissions.StepCount,
-        AppleHealthKit.Constants.Permissions.OxygenSaturation,
+        AppleHealthKit.Constants.Permissions.RestingHeartRate,
         AppleHealthKit.Constants.Permissions.RespiratoryRate,
         AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
         AppleHealthKit.Constants.Permissions.SleepAnalysis,
@@ -20,7 +20,7 @@ export default function useHealthData() {
   const [vitals, setVitals] = useState({
     heartRate: '--',
     steps: '--',
-    bloodOxygen: '--',
+    restingHeartRate: '--',
     respiratoryRate: '--',
     calories: '--',
     sleepDuration: '--',
@@ -71,10 +71,10 @@ export default function useHealthData() {
         }
       });
 
-      AppleHealthKit.getOxygenSaturationSamples(options, (e, results) => {
+      AppleHealthKit.getRestingHeartRateSamples(options, (e, results) => {
         if (!e && results.length > 0) {
           const latest = results[results.length - 1];
-          setVitals((v) => ({ ...v, bloodOxygen: `${latest.value.toFixed(0)}%` }));
+          setVitals((v) => ({ ...v, restingHeartRate: `${Math.round(latest.value)}` }));
         }
       });
 
@@ -99,14 +99,37 @@ export default function useHealthData() {
       
 
       AppleHealthKit.getSleepSamples(options, (e, results) => {
-        if (!e && results.length > 0) {
-          const latest = results[results.length - 1];
-          const durationMs = new Date(latest.endDate).getTime() - new Date(latest.startDate).getTime();
-          const hours = Math.floor(durationMs / 3600000);
-          const minutes = Math.floor((durationMs % 3600000) / 60000);
-          setVitals((v) => ({ ...v, sleepDuration: `${hours}hr ${minutes}min` }));
+        if (e || !Array.isArray(results)) {
+          console.error("❌ Sleep sample error:", e);
+          return;
         }
+      
+        const asleepValues = ["REM", "CORE", "DEEP", "UNSPECIFIED"]; // match your string values
+      
+        let totalSleepMs = 0;
+      
+        results.forEach(sample => {
+          if (asleepValues.includes(sample.value)) {
+            const start = new Date(sample.startDate);
+            const end = new Date(sample.endDate);
+            if (!isNaN(start) && !isNaN(end)) {
+              totalSleepMs += end.getTime() - start.getTime();
+            }
+          }
+        });
+      
+        const totalMinutes = Math.floor(totalSleepMs / 60000);
+        const hours = Math.floor(totalMinutes / 60);
+        const minutes = totalMinutes % 60;
+      
+        setVitals((v) => ({ ...v, sleepDuration: `${hours}hr ${minutes}min` }));
       });
+      
+      
+      
+      
+
+
     });
   }, []);
 
